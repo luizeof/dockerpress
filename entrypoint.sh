@@ -8,6 +8,10 @@ sudo -u www-data wp plugin install redis-cache --force --activate
 sudo -u www-data wp redis enable
 sudo -u www-data wp redis update-dropin
 
+service cron start
+
+service cron reload
+
 chmod +777 /var/www/html/wp-content/advanced-cache.php
 
 exec /usr/local/bin/docker-entrypoint.sh "$@"
