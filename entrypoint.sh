@@ -8,7 +8,7 @@ sudo -u www-data wp plugin install redis-cache --force --activate
 sudo -u www-data wp redis enable
 sudo -u www-data wp redis update-dropin
 
-service cron start
+service cron start 
 
 service cron reload
 

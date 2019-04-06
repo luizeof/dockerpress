@@ -1,5 +1,4 @@
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-*/5 * * * * root php  /var/www/html/wp-cron.php 2>&1
- 
+*/5 * * * * root php  /var/www/html/wp-cron.php
