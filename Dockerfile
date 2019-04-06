@@ -6,16 +6,15 @@ ENV WP_REDIS_PORT 6379
 
 ENV WP_REDIS_HOST localhost
 
-ENV PHP_MAX_MEMORY 300
-
 RUN apt-get update
 
-RUN apt-get install software-properties-common -y
-
-RUN apt-get install sudo build-essential tcl8.5 zlib1g-dev libicu-dev g++ -y
+RUN apt-get install -y sudo software-properties-common build-essential
 
 RUN apt-get install -y \
       curl \
+      tcl8.5 \
+      zlib1g-dev \
+      g++ \
       libmemcached-dev \
       libz-dev \
       libpq-dev \
