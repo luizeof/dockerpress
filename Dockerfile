@@ -1,6 +1,6 @@
 FROM wordpress:php7.2-apache
 
-ENV WP_REDIS_DATABASE 1
+ENV WP_REDIS_DATABASE 3
 
 ENV WP_REDIS_PORT 6379
 
@@ -41,7 +41,7 @@ RUN apt-get install -y \
       libmagickwand-dev \
       imagemagick
 
-RUN docker-php-ext-install pdo intl xml zip mysqli pdo_mysql soap
+RUN docker-php-ext-install pdo intl xml zip mysqli pdo_mysql soap opcache
 
 # Install the PHP gd library
 RUN docker-php-ext-configure gd \
@@ -57,6 +57,7 @@ RUN pecl install \
 
 # Enable Extra modules
 RUN docker-php-ext-enable \
+    opcache \
 		apcu \
 		memcached
 
@@ -76,9 +77,9 @@ COPY luizeof.ini /usr/local/etc/php/conf.d/luizeof.ini
 
 COPY luizeof.conf /etc/apache2/conf-available/luizeof.conf
 
-COPY wordpress.cron /etc/cron.d/wordpress
+COPY luizeof.cron /etc/cron.d/luizeof
 
-RUN chmod +777 /etc/cron.d/wordpress
+RUN chmod +x /etc/cron.d/luizeof
 
 RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
 
