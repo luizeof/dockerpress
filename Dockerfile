@@ -1,16 +1,16 @@
 FROM wordpress:php7.2-apache
 
-ENV WP_REDIS_DATABASE 3
-
+# Redis Defaults
+ENV WP_REDIS_DATABASE 2
 ENV WP_REDIS_PORT 6379
-
 ENV WP_REDIS_HOST localhost
 
-RUN apt-get update
-
-RUN apt-get install -y sudo software-properties-common build-essential
-
-RUN apt-get install -y \
+# Update apt-cache and core libraries
+RUN apt-get update \
+    apt-get install -y \
+      sudo \
+      software-properties-common \
+      build-essential \
       curl \
       tcl8.5 \
       zlib1g-dev \
@@ -41,6 +41,7 @@ RUN apt-get install -y \
       libmagickwand-dev \
       imagemagick
 
+# Instll PHP modules
 RUN docker-php-ext-install pdo intl xml zip mysqli pdo_mysql soap opcache
 
 # Install the PHP gd library
@@ -61,50 +62,49 @@ RUN docker-php-ext-enable \
 		apcu \
 		memcached
 
+# Install and enable redis
 RUN printf "\n" | printf "\n" | pecl install redis
-
 RUN docker-php-ext-enable redis
 
+# Install and enable imagick
 RUN pecl install imagick -y
-
 RUN docker-php-ext-enable imagick
-
 RUN docker-php-ext-install exif
 
+# Enable apache modules
 RUN a2enmod setenvif headers deflate filter expires rewrite include ext_filter
 
+# Enable custom parameters
 COPY luizeof.ini /usr/local/etc/php/conf.d/luizeof.ini
-
 COPY luizeof.conf /etc/apache2/conf-available/luizeof.conf
 
+# Setting up crontab
 COPY luizeof.cron /etc/cron.d/luizeof
-
 RUN chmod +x /etc/cron.d/luizeof
-
-RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
-
-RUN dpkg -i /home/mod-pagespeed-*.deb
-
-RUN apt-get -f install
-
-RUN curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-
-RUN mkdir -p /var/www/.wp-cli/cache/
-
-RUN chown -R www-data:www-data /var/www/.wp-cli/cache/
-
-RUN chmod -R +777 /var/www/.wp-cli/cache
-
-RUN mv /var/www/wp-cli.phar /usr/local/bin/wp
-
-RUN chmod +x /usr/local/bin/wp
-
 RUN a2enconf luizeof
 
+# Installing Apache mod-pagespeed
+RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
+RUN dpkg -i /home/mod-pagespeed-*.deb
+RUN apt-get -f install
+
+# Install and Setup wp-cli
+RUN curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN mkdir -p /var/www/.wp-cli/cache/
+RUN chown -R www-data:www-data /var/www/.wp-cli/cache/
+RUN mv /var/www/wp-cli.phar /usr/local/bin/wp-cli.phar
+RUN chmod +x /usr/local/bin/wp-cli.phar
+
+# Copy wp-cli wrapper
+COPY wp.sh /usr/local/bin/wp
+RUN chmod +x /usr/local/bin/wp
+
+# Copy redis-setup script
+COPY redis-setup.sh /usr/local/bin/redis-setup
+RUN chmod +x /usr/local/bin/redis-setup
+
+# Running container startup scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-
 RUN chmod +x /usr/local/bin/entrypoint.sh
-
 ENTRYPOINT ["entrypoint.sh"]
-
 CMD ["apache2-foreground"]
