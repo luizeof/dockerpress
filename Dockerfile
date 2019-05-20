@@ -6,7 +6,7 @@ ENV WP_REDIS_PORT 6379
 ENV WP_REDIS_HOST localhost
 
 # Update apt-cache and core libraries
-RUN apt-get update \
+RUN apt-get update && \
     apt-get install -y \
       sudo \
       software-properties-common \
