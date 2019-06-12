@@ -71,7 +71,7 @@ RUN printf "\n" | printf "\n" | pecl install redis
 RUN docker-php-ext-enable redis
 
 # Install and enable imagick
-RUN pecl install imagick -y
+RUN pecl install imagick
 RUN docker-php-ext-enable imagick
 RUN docker-php-ext-install exif
 
