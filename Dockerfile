@@ -1,4 +1,4 @@
-FROM wordpress:php7.2-apache
+FROM wordpress:php7.3-apache
 
 # Redis Defaults
 ENV WP_REDIS_DATABASE 2
@@ -39,7 +39,9 @@ RUN apt-get update && \
       zip \
       unzip \
       libmagickwand-dev \
-      imagemagick
+      imagemagick \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
 
 # Instll PHP modules
 RUN docker-php-ext-install pdo intl xml zip mysqli pdo_mysql soap opcache bcmath
