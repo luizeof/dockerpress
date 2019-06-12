@@ -58,7 +58,7 @@ RUN docker-php-ext-configure gd \
 # Install Extra modules
 RUN pecl install \
 		apcu-5.1.11 \
-		memcached-3.0.4
+		memcached
 
 # Enable Extra modules
 RUN docker-php-ext-enable \
