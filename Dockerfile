@@ -30,6 +30,7 @@ RUN apt-get update && \
   		libldap2-dev \
   		libmemcached-dev \
   		libxml2-dev \
+      libzip-dev \
   		libz-dev \
       tidy \
       libapache2-modsecurity \
