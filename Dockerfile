@@ -42,7 +42,8 @@ RUN apt-get update && \
       imagemagick
 
 # Instll PHP modules
-RUN docker-php-ext-install pdo intl xml zip mysqli pdo_mysql soap opcache
+RUN docker-php-ext-install pdo intl xml zip mysqli pdo_mysql soap opcache bcmath
+
 
 # Install the PHP gd library
 RUN docker-php-ext-configure gd \
@@ -58,6 +59,7 @@ RUN pecl install \
 
 # Enable Extra modules
 RUN docker-php-ext-enable \
+    bcmath \
     opcache \
 		apcu \
 		memcached
