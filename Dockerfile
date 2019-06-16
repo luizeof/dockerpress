@@ -1,7 +1,7 @@
 FROM wordpress:php7.3-apache
 
 LABEL name="DockerPress"
-LABEL version="1.0"
+LABEL version="1.0.0"
 LABEL release="2019-06-16"
 
 # Redis Defaults
