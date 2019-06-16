@@ -104,10 +104,6 @@ RUN chmod +x /usr/local/bin/wp-cli.phar
 COPY wp.sh /usr/local/bin/wp
 RUN chmod +x /usr/local/bin/wp
 
-RUN curl -o /var/www/wp-completion.bash https://raw.githubusercontent.com/wp-cli/wp-cli/v1.5.1/utils/wp-completion.bash
-RUN echo 'source /var/www/wp-completion.bash' >> ~/.bash_profile
-RUN source ~/.bash_profile
-
 # Copy redis-setup script
 COPY redis-setup.sh /usr/local/bin/redis-setup
 RUN chmod +x /usr/local/bin/redis-setup
