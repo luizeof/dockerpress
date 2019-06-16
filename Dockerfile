@@ -85,12 +85,14 @@ RUN a2enmod setenvif headers deflate filter expires rewrite include ext_filter
 
 # Enable custom parameters
 COPY luizeof.ini /usr/local/etc/php/conf.d/luizeof.ini
-COPY luizeof.conf /etc/apache2/conf-available/luizeof.conf
+
+# Enable Apache Configs
+COPY luizeof-cache.conf /etc/apache2/conf-available/luizeof-cache.conf
+RUN a2enconf luizeof-cache
 
 # Setting up crontab
 COPY luizeof.cron /etc/cron.d/luizeof
 RUN chmod +x /etc/cron.d/luizeof
-RUN a2enconf luizeof
 
 # Installing Apache mod-pagespeed
 RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
