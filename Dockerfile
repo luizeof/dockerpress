@@ -99,20 +99,9 @@ RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com
 RUN dpkg -i /home/mod-pagespeed-*.deb
 RUN apt-get -f install
 
-# Install and Setup wp-cli
-RUN curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN mkdir -p /var/www/.wp-cli/cache/
-RUN chown -R www-data:www-data /var/www/.wp-cli/cache/
-RUN mv /var/www/wp-cli.phar /usr/local/bin/wp-cli.phar
-RUN chmod +x /usr/local/bin/wp-cli.phar
-
-# Copy wp-cli wrapper
-COPY wp.sh /usr/local/bin/wp
-RUN chmod +x /usr/local/bin/wp
-
-# Copy redis-setup script
-COPY redis-setup.sh /usr/local/bin/redis-setup
-RUN chmod +x /usr/local/bin/redis-setup
+# Copy commands
+COPY bin/* /usr/local/bin/
+RUN chmod -R +777 /usr/local/bin/
 
 EXPOSE 80
 
