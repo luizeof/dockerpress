@@ -33,6 +33,9 @@ RUN apt-get update && \
   		libicu-dev \
   		libldap2-dev \
   		libmemcached-dev \
+      python \
+      python-setuptools \
+      python-pip \
   		libxml2-dev \
       libzip-dev \
   		libz-dev \
@@ -42,10 +45,12 @@ RUN apt-get update && \
       nano \
       htop \
       zip \
+      mysql-client \
+      git \
       unzip \
       libmagickwand-dev \
       imagemagick \
-      && apt-get clean \
+      && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
       && rm -rf /var/lib/apt/lists/*
 
 # Instll PHP modules

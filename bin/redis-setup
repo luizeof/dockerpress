@@ -2,8 +2,6 @@
 
 if $(wp core is-installed); then
 
-    wp config create --dbname=testing --dbuser=wp --dbpass=securepswd --locale=ro_RO
-
     echo "Setting up redis..."
 
     wp config set WP_CACHE true --raw --add --type=constant
