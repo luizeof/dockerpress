@@ -2,7 +2,7 @@
 
 if [ -z "$1" ];
 then
-  sudo -E -u www-data /var/www/wp-cli.phar --info
+  
 else
   sudo -E -u www-data /var/www/wp-cli.phar "$@"
 fi
