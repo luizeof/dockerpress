@@ -2,7 +2,7 @@
 
 if [ -z "$1" ];
 then
-  
+  echo "use: wp command"
 else
   sudo -E -u www-data /var/www/wp-cli.phar "$@"
 fi
