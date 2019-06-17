@@ -2,7 +2,7 @@
 
 wpcli-setup
 
-if $(wp core is-installed); then
+if ! $(wp core is-installed); then
 
     wp config create --dbname=$WORDPRESS_DB_NAME --dbhost=$WORDPRESS_DB_HOST --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRESS_DB_PASSWORD --locale=pt_BR
 
