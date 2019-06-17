@@ -2,27 +2,6 @@
 
 wpcli-setup
 
-if ! $(wp core is-installed); then
-
-    wp config create --dbname=$WORDPRESS_DB_NAME --dbhost=$WORDPRESS_DB_HOST --dbuser=$WORDPRESS_DB_USER --dbpass=$WORDPRESS_DB_PASSWORD --locale=pt_BR
-
-    echo "Setting up redis..."
-
-    wp config set WP_CACHE true --raw --add --type=constant
-    wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
-    wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
-    wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
-
-    wp plugin install redis-cache --force --activate
-    wp redis enable
-    wp redis update-dropin
-
-    chmod +777 /var/www/html/wp-content/advanced-cache.php
-
-    echo "Done."
-
-fi
-
 service cron start
 
 service cron reload
