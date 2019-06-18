@@ -18,6 +18,7 @@ RUN apt-get update && \
       curl \
       tcl8.5 \
       zlib1g-dev \
+      cron \
       g++ \
       libmemcached-dev \
       libz-dev \
