@@ -2,7 +2,7 @@
 
 if $(wp core is-installed); then
 
-    echo "Setting up redis..."
+    echo "Setting up Redis..."
 
     wp config set WP_CACHE true --raw --add --type=constant
     wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
