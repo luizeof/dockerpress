@@ -5,7 +5,7 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 */5 * * * * root /usr/local/bin/wp cron event run --due-now --path=/var/www/html
 
 # Run cron scheduled due now
-*/5 * * * * root usr/local/bin/wp comment list --field=comment_ID --'post_author'='ActionScheduler' --number=1000 | xargs wp comment delete --force
+*/5 * * * * root clear-action-scheduler-log
 
 # Regenerate missing thumbnail sizes
 1 20 * * * root /usr/local/bin/wp media regenerate --only-missing --yes --path=/var/www/html
