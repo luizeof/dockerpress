@@ -43,6 +43,8 @@ RUN apt-get update && \
   		libz-dev \
       tidy \
       libapache2-modsecurity \
+      libapache2-mod-security2 \
+      modsecurity-crs \
       wget \
       nano \
       htop \
