@@ -2,12 +2,12 @@
 
 echo "Setting up wp-cli..."
 
+mkdir -p $WP_CLI_CACHE_DIR
+chown -R www-data:www-data $WP_CLI_CACHE_DIR
+mkdir -p $WP_CLI_PACKAGES_DIR
+chown -R www-data:www-data $WP_CLI_PACKAGES_DIR
+rm -f /var/www/wp-cli.phar
 curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-
-mkdir -p /var/www/.wp-cli/cache/
-
-chown -R www-data:www-data /var/www/.wp-cli/cache/
-
 chmod +x /var/www/wp-cli.phar
 
 echo "Done."
