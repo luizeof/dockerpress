@@ -1,27 +1,34 @@
-FROM wordpress:php7.2-apache
+FROM wordpress:php7.3-apache
 
-ENV WP_REDIS_DATABASE 3
+LABEL name="DockerPress"
+LABEL version="1.0.0"
+LABEL release="2019-06-16"
 
+# Redis Defaults
+ENV WP_REDIS_DATABASE 2
 ENV WP_REDIS_PORT 6379
-
 ENV WP_REDIS_HOST localhost
+ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
+ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 
-RUN apt-get update
-
-RUN apt-get install -y sudo software-properties-common build-essential
-
-RUN apt-get install -y \
+# Update apt-cache and core libraries
+RUN apt-get update && \
+    apt-get install -y \
+      sudo \
+      software-properties-common \
+      build-essential \
       curl \
       tcl8.5 \
       zlib1g-dev \
+      cron \
       g++ \
-      libmemcached-dev \
       libz-dev \
       libpq-dev \
       libjpeg-dev \
       libpng-dev \
       libfreetype6-dev \
       libcurl4-openssl-dev \
+      libaprutil1-dev \
       libssl-dev \
       bzip2 \
       csstidy \
@@ -29,19 +36,31 @@ RUN apt-get install -y \
   		libicu-dev \
   		libldap2-dev \
   		libmemcached-dev \
+      python \
+      python-setuptools \
+      python-pip \
   		libxml2-dev \
+      libzip-dev \
   		libz-dev \
       tidy \
       libapache2-modsecurity \
+      libapache2-mod-security2 \
+      modsecurity-crs \
       wget \
       nano \
       htop \
       zip \
+      mysql-client \
+      git \
       unzip \
       libmagickwand-dev \
-      imagemagick
+      imagemagick \
+      && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+      && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install pdo intl xml zip mysqli pdo_mysql soap opcache
+# Instll PHP modules
+RUN docker-php-ext-install pdo intl xml zip mysqli pdo_mysql soap opcache bcmath
+
 
 # Install the PHP gd library
 RUN docker-php-ext-configure gd \
@@ -53,58 +72,51 @@ RUN docker-php-ext-configure gd \
 # Install Extra modules
 RUN pecl install \
 		apcu-5.1.11 \
-		memcached-3.0.4
+		memcached
 
 # Enable Extra modules
 RUN docker-php-ext-enable \
+    bcmath \
     opcache \
 		apcu \
 		memcached
 
+# Install and enable redis
 RUN printf "\n" | printf "\n" | pecl install redis
-
 RUN docker-php-ext-enable redis
 
-RUN pecl install imagick -y
-
+# Install and enable imagick
+# RUN pecl install imagick
 RUN docker-php-ext-enable imagick
-
 RUN docker-php-ext-install exif
 
-RUN a2enmod setenvif headers deflate filter expires rewrite include ext_filter
+# Enable apache modules
+RUN a2enmod setenvif headers security2 deflate filter expires rewrite include ext_filter
 
+# Enable custom parameters
 COPY luizeof.ini /usr/local/etc/php/conf.d/luizeof.ini
 
-COPY luizeof.conf /etc/apache2/conf-available/luizeof.conf
+# Enable Apache Configs
+COPY luizeof-cache.conf /etc/apache2/conf-available/luizeof-cache.conf
+RUN a2enconf luizeof-cache
 
+# Setting up crontab
 COPY luizeof.cron /etc/cron.d/luizeof
-
 RUN chmod +x /etc/cron.d/luizeof
 
+# Installing Apache mod-pagespeed
 RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
-
 RUN dpkg -i /home/mod-pagespeed-*.deb
-
 RUN apt-get -f install
 
-RUN curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+# Copy commands
+COPY bin/* /usr/local/bin/
+RUN chmod -R +777 /usr/local/bin/
 
-RUN mkdir -p /var/www/.wp-cli/cache/
+EXPOSE 80
 
-RUN chown -R www-data:www-data /var/www/.wp-cli/cache/
-
-RUN chmod -R +777 /var/www/.wp-cli/cache
-
-RUN mv /var/www/wp-cli.phar /usr/local/bin/wp
-
-RUN chmod +x /usr/local/bin/wp
-
-RUN a2enconf luizeof
-
+# Running container startup scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-
 RUN chmod +x /usr/local/bin/entrypoint.sh
-
 ENTRYPOINT ["entrypoint.sh"]
-
 CMD ["apache2-foreground"]

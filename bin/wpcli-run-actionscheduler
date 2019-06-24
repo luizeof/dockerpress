@@ -1,0 +1,3 @@
+#!/bin/sh
+
+wp action-scheduler run

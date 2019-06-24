@@ -1,0 +1,3 @@
+#!/bin/sh
+
+wp cron event run --due-now --all --path=/var/www/html
