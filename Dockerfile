@@ -8,6 +8,8 @@ LABEL release="2019-06-16"
 ENV WP_REDIS_DATABASE 2
 ENV WP_REDIS_PORT 6379
 ENV WP_REDIS_HOST localhost
+ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
+ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 
 # Update apt-cache and core libraries
 RUN apt-get update && \
