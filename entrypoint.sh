@@ -21,6 +21,8 @@ if $(wp core is-installed); then
     wp redis update-dropin
     chmod +777 /var/www/html/wp-content/object-cache.php
 
+    wp redis status
+
 fi
 
 service cron start
