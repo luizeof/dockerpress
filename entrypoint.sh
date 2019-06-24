@@ -5,11 +5,9 @@ rm -rf /var/www/wp-cli.phar
 curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
 mkdir -p $WP_CLI_CACHE_DIR
-
 chown -R www-data:www-data $WP_CLI_CACHE_DIR
 
 mkdir -p $WP_CLI_PACKAGES_DIR
-
 chown -R www-data:www-data $WP_CLI_PACKAGES_DIR
 
 chmod +x /var/www/wp-cli.phar
@@ -32,7 +30,6 @@ if $(wp core is-installed); then
 fi
 
 service cron start
-
 service cron reload
 
 exec /usr/local/bin/docker-entrypoint.sh "$@"
