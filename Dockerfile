@@ -20,7 +20,6 @@ RUN apt-get update && \
       zlib1g-dev \
       cron \
       g++ \
-      libmemcached-dev \
       libz-dev \
       libpq-dev \
       libjpeg-dev \
