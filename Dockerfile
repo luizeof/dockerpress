@@ -27,6 +27,7 @@ RUN apt-get update && \
       libpng-dev \
       libfreetype6-dev \
       libcurl4-openssl-dev \
+      libaprutil1-dev \
       libssl-dev \
       bzip2 \
       csstidy \
@@ -87,7 +88,7 @@ RUN docker-php-ext-enable imagick
 RUN docker-php-ext-install exif
 
 # Enable apache modules
-RUN a2enmod setenvif headers deflate filter expires rewrite include ext_filter
+RUN a2enmod setenvif headers security2 deflate filter expires rewrite include ext_filter
 
 # Enable custom parameters
 COPY luizeof.ini /usr/local/etc/php/conf.d/luizeof.ini
