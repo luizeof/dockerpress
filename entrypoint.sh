@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf /var/www/wp-cli.phar
+rm -f /var/www/wp-cli.phar
 
 curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 
