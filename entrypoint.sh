@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "Setting up wp-cli..."
-
 rm -rf /var/www/wp-cli.phar
 
 curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
@@ -12,11 +10,7 @@ chown -R www-data:www-data /var/www/.wp-cli/cache/
 
 chmod +x /var/www/wp-cli.phar
 
-echo "Done."
-
 if $(wp core is-installed); then
-
-    echo "Setting up Redis..."
 
     wp config set WP_CACHE true --raw --add --type=constant
     wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
@@ -30,8 +24,6 @@ if $(wp core is-installed); then
     wp redis update-dropin
 
     chmod +777 /var/www/html/wp-content/object-cache.php
-
-    echo "Done."
 
 fi
 
