@@ -55,6 +55,7 @@ RUN apt-get update && \
       unzip \
       libmagickwand-dev \
       imagemagick \
+      ghostscript \
       && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
       && rm -rf /var/lib/apt/lists/*
 
