@@ -11,7 +11,7 @@ chmod +x /var/www/wp-cli.phar
 wp config set WP_SITEURL "https://$VIRTUAL_HOST" --add --type=constant
 wp config set WP_HOME "https://$VIRTUAL_HOST" --add --type=constant
 
-#if $(wp core is-installed); then
+if $(wp core is-installed); then
 
     wp config set WP_CACHE true --raw --add --type=constant
     wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
@@ -26,7 +26,7 @@ wp config set WP_HOME "https://$VIRTUAL_HOST" --add --type=constant
 
     wp redis status
 
-#fi
+fi
 
 service cron start
 service cron reload
