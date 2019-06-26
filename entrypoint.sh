@@ -8,7 +8,10 @@ rm -f /var/www/wp-cli.phar
 curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x /var/www/wp-cli.phar
 
-if $(wp core is-installed); then
+wp config set WP_SITEURL "https://$VIRTUAL_HOST" --add --type=constant
+wp config set WP_HOME "https://$VIRTUAL_HOST" --add --type=constant
+
+#if $(wp core is-installed); then
 
     wp config set WP_CACHE true --raw --add --type=constant
     wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
@@ -23,7 +26,7 @@ if $(wp core is-installed); then
 
     wp redis status
 
-fi
+#fi
 
 service cron start
 service cron reload
