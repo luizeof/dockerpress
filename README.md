@@ -15,10 +15,10 @@ Utilize os valores abaixo para configurar sua instalação do Wordpress.
 #### Configurações do Mysql
 | ENV | Padrão | Obrigatório | Descrição |
 | --- | --- | --- | --- |
-| WORDPRESS_DB_HOST |  | Sim | IP ou Host |
+| WORDPRESS_DB_HOST |  | Sim | IP ou Host do MySQL |
 | WORDPRESS_DB_NAME	|  | Sim | Nome do Banco de Dados |
-| WORDPRESS_DB_PASSWORD |	 | Sim | Senha do Banco de Dados |
-| WORDPRESS_DB_USER	|  | Sim | Usuário do Banco de Dados |
+| WORDPRESS_DB_PASSWORD |	 | Sim | Senha do MySQL |
+| WORDPRESS_DB_USER	|  | Sim | Usuário do MySQL |
 
 #### Configurações do  Redis
 | ENV | Padrão | Obrigatório | Descrição |
