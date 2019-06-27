@@ -1,14 +1,16 @@
 # dockerpress
 
-O DockerPress é uma suíte de containers que permite Configurar um Ambiente Docker exclusivo para WordPress com as ferramentas mais poderosas da atualidade.
+O DockerPress é uma suíte de serviços que permite Configurar um Ambiente Docker exclusivo para WordPress com as ferramentas mais poderosas da atualidade.
 
 **Sem acesso ao SSH**, não é necessário conhecimento de infra e funciona nos principais provedores: **Digital Ocean**, **Linode**, **Vultr** e **AWS Lightsail**.
 
-**[Ainda não domina o Docker? Faça o Curso Setup  Configuração do Wordpress com Dockere](https://www.udemy.com/setup-e-configuracao-do-wordpress-com-docker/?couponCode=GITHUB) no Udemy.**
+- **[Ainda não domina o Docker? Faça o Curso Setup  Configuração do Wordpress com Docker](https://www.udemy.com/setup-e-configuracao-do-wordpress-com-docker/?couponCode=GITHUB) no Udemy.**
+
+- Acompanhe o DockerPress em [https://hub.docker.com/r/luizeof/dockerpress](https://hub.docker.com/r/luizeof/dockerpress).
 
 ## Variáveis de Ambiente
 
-Utilize os valors abaixo para configurar sua instalação do Wordpress.
+Utilize os valores abaixo para configurar sua instalação do Wordpress.
 
 #### Configurações do Mysql
 | ENV | Padrão | Obrigatório | Descrição |
