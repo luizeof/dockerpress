@@ -1,4 +1,4 @@
-# dockerpress
+# DockerPress
 
 O DockerPress é uma suíte de serviços que permite Configurar um Ambiente Docker exclusivo para WordPress com as ferramentas mais poderosas da atualidade.
 
