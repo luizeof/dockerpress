@@ -14,8 +14,8 @@ O DockerPress é uma suíte de containers que permite Configurar um Ambiente Doc
 | WORDPRESS_DB_NAME	|  | Sim | Nome do Banco de Dados |
 | WORDPRESS_DB_PASSWORD |	 | Sim | Senha do Banco de Dados |
 | WORDPRESS_DB_USER	|  | Sim | Usuário do Banco de Dados |
-| WP_REDIS_DATABASE |	1 | Não | Banco de Dados do Redis |
-| WP_REDIS_PORT	| 6379 | Não | Porta do Redis |
+| WP_REDIS_DATABASE |	1 | Não | ID do Banco de Dados Redis |
+| WP_REDIS_PORT	| 6379 | Não | Porta do Servidor Redis |
 | WP_REDIS_HOST	|  | Não | IP do Servidor Redis |
 
 
