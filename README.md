@@ -4,7 +4,7 @@ O DockerPress é uma suíte de serviços que permite Configurar um Ambiente Dock
 
 **Sem acesso ao SSH**, não é necessário conhecimento de infra e funciona nos principais provedores: **Digital Ocean**, **Linode**, **Vultr** e **AWS Lightsail**.
 
-- **[Ainda não domina o Docker? Faça o Curso Setup  Configuração do Wordpress com Docker](https://www.udemy.com/setup-e-configuracao-do-wordpress-com-docker/?couponCode=GITHUB) no Udemy.**
+- **[Ainda não domina o Docker? Faça o Curso Setup Configuração do Wordpress com Docker](https://www.udemy.com/setup-e-configuracao-do-wordpress-com-docker/?couponCode=GITHUB) com DockerPress como base no Udemy.**
 
 - Acompanhe o DockerPress em [https://hub.docker.com/r/luizeof/dockerpress](https://hub.docker.com/r/luizeof/dockerpress).
 
