@@ -6,14 +6,21 @@ O DockerPress é uma suíte de containers que permite Configurar um Ambiente Doc
 
 **[Ainda não domina o Docker? Faça o Curso Setup  Configuração do Wordpress com Dockere](https://www.udemy.com/setup-e-configuracao-do-wordpress-com-docker/?couponCode=GITHUB) no Udemy.**
 
-### Variáveis de Ambiente
+## Variáveis de Ambiente
 
+Utilize os valors abaixo para configurar sua instalação do Wordpress.
+
+#### Configurações do Mysql
 | ENV | Padrão | Obrigatório | Descrição |
 | --- | --- | --- | --- |
 | WORDPRESS_DB_HOST |  | Sim | IP ou Host |
 | WORDPRESS_DB_NAME	|  | Sim | Nome do Banco de Dados |
 | WORDPRESS_DB_PASSWORD |	 | Sim | Senha do Banco de Dados |
 | WORDPRESS_DB_USER	|  | Sim | Usuário do Banco de Dados |
+
+#### Configurações do  Redis
+| ENV | Padrão | Obrigatório | Descrição |
+| --- | --- | --- | --- |
 | WP_REDIS_DATABASE |	1 | Não | ID do Banco de Dados Redis |
 | WP_REDIS_PORT	| 6379 | Não | Porta do Servidor Redis |
 | WP_REDIS_HOST	|  | Não | IP do Servidor Redis |
