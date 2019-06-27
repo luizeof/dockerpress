@@ -50,5 +50,3 @@ meusite_com_br:
     LETSENCRYPT_HOST: meusite.com.br
     LETSENCRYPT_EMAIL: luizeof@gmail.com
 ```
-
-a
