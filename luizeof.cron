@@ -1,23 +1,10 @@
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-# Run cron scheduled due now
 */2 * * * * root /usr/local/bin/wpcli-run-schedule
-
-# Run cron actionscheduler due now
 */3 * * * * root /usr/local/bin/wpcli-run-actionscheduler
-
-# Clear Action Schedule Logs
 * 5 * * * root /usr/local/bin/wpcli-clear-scheduler-log
-
-# Regenerate missing thumbnail sizes
 1 20 * * * root /usr/local/bin/wp media regenerate --only-missing --yes --path=/var/www/html
-
-# Delete expired transient
 2 30 * * * root /usr/local/bin/wp transient delete --expired --path=/var/www/html
-
-# Flush Object Cache
 0 10 * * * root /usr/local/bin/wp cache flush --path=/var/www/html
-
-# Remove spam comments
 0 30 * * * root /usr/local/bin/wp comment delete $(/usr/local/bin/wp comment list --status=spam --format=ids) --path=/var/www/html

@@ -10,6 +10,7 @@ ENV WP_REDIS_PORT 6379
 ENV WP_REDIS_HOST localhost
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
+ENV ADMIN_EMAIL "webmaster@localhost"
 
 # Update apt-cache and core libraries
 RUN apt-get update && \
