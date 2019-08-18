@@ -41,11 +41,7 @@ RUN apt-get update ; \
     libicu-dev \
     libldap2-dev \
     libmemcached-dev \
-    python \
-    python-setuptools \
-    python-pip \
     libxml2-dev \
-    libzip-dev \
     libz-dev \
     tidy \
     libapache2-mod-security2 \
