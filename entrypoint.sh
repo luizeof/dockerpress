@@ -1,5 +1,7 @@
 #!/bin/bash
 
+exec /usr/local/bin/docker-entrypoint.sh "$@"
+
 # Setup wp-cli
 echo "Setting up wp-cli..."
 mkdir -p $WP_CLI_CACHE_DIR
@@ -41,5 +43,3 @@ echo '' > /etc/cron.d/dockerpress
 chmod 644 /etc/cron.d/dockerpress
 service cron start
 service cron reload
-
-exec /usr/local/bin/docker-entrypoint.sh "$@"
