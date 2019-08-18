@@ -11,6 +11,7 @@ ENV WP_REDIS_HOST localhost
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 ENV ADMIN_EMAIL "webmaster@localhost"
+ENV WP_POST_REVISIONS true
 
 # Update apt-cache and core libraries
 RUN apt-get update && \
@@ -19,7 +20,7 @@ RUN apt-get update && \
       software-properties-common \
       build-essential \
       curl \
-      tcl8.5 \
+      tcl \
       zlib1g-dev \
       cron \
       g++ \
@@ -51,7 +52,7 @@ RUN apt-get update && \
       nano \
       htop \
       zip \
-      mysql-client \
+      mariadb-client \
       git \
       unzip \
       libmagickwand-dev \
