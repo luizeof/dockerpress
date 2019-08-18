@@ -31,8 +31,6 @@ RUN apt-get update ; \
     g++ \
     libz-dev \
     libpq-dev \
-    libjpeg-dev \
-    libpng-dev \
     libfreetype6-dev \
     libcurl4-openssl-dev \
     libaprutil1-dev \
