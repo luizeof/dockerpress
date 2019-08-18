@@ -2,6 +2,7 @@
 
 # Setup wp-cli
 echo "Setting up wp-cli..."
+rm -rf /var/www/.wp-cli/
 mkdir -p $WP_CLI_CACHE_DIR
 chown -R www-data:www-data $WP_CLI_CACHE_DIR
 rm -rf $WP_CLI_PACKAGES_DIR
