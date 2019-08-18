@@ -16,55 +16,100 @@ ENV WP_LOCALE "pt_BR"
 
 VOLUME /var/www/html
 
-# Update apt-cache and core libraries
-RUN apt-get update && \
-    apt-get install -y \
-      sudo \
-      software-properties-common \
-      build-essential \
-      curl \
-      tcl \
-      zlib1g-dev \
-      cron \
-      g++ \
-      libz-dev \
-      libpq-dev \
-      libjpeg-dev \
-      libpng-dev \
-      libfreetype6-dev \
-      libcurl4-openssl-dev \
-      libaprutil1-dev \
-      libssl-dev \
-      bzip2 \
-      csstidy \
-      libfreetype6-dev \
-  		libicu-dev \
-  		libldap2-dev \
-  		libmemcached-dev \
-      python \
-      python-setuptools \
-      python-pip \
-  		libxml2-dev \
-      libzip-dev \
-  		libz-dev \
-      tidy \
-      libapache2-mod-security2 \
-      modsecurity-crs \
-      wget \
-      nano \
-      htop \
-      zip \
-      mariadb-client \
-      git \
-      unzip \
-      libmagickwand-dev \
-      imagemagick \
-      ghostscript \
-      && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-      && rm -rf /var/lib/apt/lists/*
 
-# Instll PHP modules
-RUN docker-php-ext-install pdo intl xml zip mysqli pdo_mysql soap opcache bcmath
+# install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
+RUN set -ex; \
+	\
+	savedAptMark="$(apt-mark showmanual)"; \
+	\
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		libjpeg-dev \
+		libmagickwand-dev \
+		libpng-dev \
+    sudo \
+    software-properties-common \
+    build-essential \
+    curl \
+    tcl \
+    zlib1g-dev \
+    cron \
+    g++ \
+    libz-dev \
+    libpq-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    libcurl4-openssl-dev \
+    libaprutil1-dev \
+    libssl-dev \
+    bzip2 \
+    csstidy \
+    libfreetype6-dev \
+    libicu-dev \
+    libldap2-dev \
+    libmemcached-dev \
+    python \
+    python-setuptools \
+    python-pip \
+    libxml2-dev \
+    libzip-dev \
+    libz-dev \
+    tidy \
+    libapache2-mod-security2 \
+    modsecurity-crs \
+    wget \
+    nano \
+    htop \
+    zip \
+    mariadb-client \
+    git \
+    unzip \
+    libmagickwand-dev \
+    imagemagick \
+    ghostscript \
+		libzip-dev \
+	; \
+	\
+	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
+	docker-php-ext-install -j "$(nproc)" \
+		bcmath \
+		exif \
+		gd \
+    pdo \
+    intl \
+    xml \
+    pdo_mysql \
+    soap \
+    opcache \
+		mysqli \
+		opcache \
+		zip \
+	; \
+  printf "\n" | printf "\n" | pecl install redis ; \
+	pecl install imagick-3.4.4 \
+  apcu-5.1.11 \
+  memcached ; \
+	docker-php-ext-enable imagick \
+  bcmath \
+  redis \
+  opcache \
+  apcu \
+  memcached ; \
+	\
+  # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
+	apt-mark auto '.*' > /dev/null; \
+	apt-mark manual $savedAptMark; \
+	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
+		| awk '/=>/ { print $3 }' \
+		| sort -u \
+		| xargs -r dpkg-query -S \
+		| cut -d: -f1 \
+		| sort -u \
+		| xargs -rt apt-mark manual; \
+	\
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	rm -rf /var/lib/apt/lists/*
 
 
 # set recommended PHP.ini settings
@@ -92,38 +137,6 @@ RUN { \
 		echo 'ignore_repeated_source = Off'; \
 		echo 'html_errors = Off'; \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
-
-
-# Install the PHP gd library
-RUN docker-php-ext-configure gd \
-      --enable-gd-native-ttf \
-      --with-jpeg-dir=/usr/lib \
-      --with-freetype-dir=/usr/include/freetype2 && \
-    docker-php-ext-install gd
-
-# Install Extra modules
-RUN pecl install \
-		apcu-5.1.11 \
-		memcached
-
-RUN pecl install imagick-3.4.4
-
-
-# Enable Extra modules
-RUN docker-php-ext-enable \
-    bcmath \
-    opcache \
-		apcu \
-		memcached
-
-# Install and enable redis
-RUN printf "\n" | printf "\n" | pecl install redis
-RUN docker-php-ext-enable redis
-
-# Install and enable imagick
-# RUN pecl install imagick
-RUN docker-php-ext-enable imagick
-RUN docker-php-ext-install exif
 
 # Enable apache modules
 RUN a2enmod setenvif headers security2 deflate filter expires rewrite include ext_filter
