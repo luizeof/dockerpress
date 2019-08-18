@@ -45,7 +45,6 @@ RUN apt-get update && \
       libzip-dev \
   		libz-dev \
       tidy \
-      libapache2-modsecurity \
       libapache2-mod-security2 \
       modsecurity-crs \
       wget \
