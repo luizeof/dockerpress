@@ -126,7 +126,15 @@ RUN { \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
 
 # Enable apache modules
-RUN a2enmod setenvif headers security2 deflate filter expires rewrite include ext_filter
+RUN a2enmod setenvif \
+      headers \
+      security2 \
+      deflate \
+      filter \
+      expires \
+      rewrite \
+      include \
+      ext_filter
 
 # Enable Apache Configs
 COPY dockerpress.conf /etc/apache2/conf-available/dockerpress.conf
