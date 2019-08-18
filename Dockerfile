@@ -93,16 +93,24 @@ RUN apt-get update ; \
 	rm -rf /var/lib/apt/lists/*
 
 
-# set recommended PHP.ini settings
+# set recommended opcache settings
 # see https://secure.php.net/manual/en/opcache.installation.php
 RUN { \
-		echo 'opcache.memory_consumption=128'; \
+		echo 'opcache.memory_consumption=256'; \
 		echo 'opcache.interned_strings_buffer=8'; \
-		echo 'opcache.max_accelerated_files=4000'; \
+		echo 'opcache.max_accelerated_files=9999'; \
 		echo 'opcache.revalidate_freq=2'; \
 		echo 'opcache.fast_shutdown=1'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
+# set recommended PHP.ini settings
+RUN { \
+  	echo 'file_uploads = On'; \
+  	echo 'upload_max_filesize = 256M'; \
+  	echo 'post_max_size = 256M'; \
+  	echo 'max_execution_time = 999'; \
+  	echo 'memory_limit = 512M'; \
+  } > /usr/local/etc/php/conf.d/php73-recommended.ini
 
 # https://wordpress.org/support/article/editing-wp-config-php/#configure-error-logging
 RUN { \
@@ -119,9 +127,6 @@ RUN { \
 
 # Enable apache modules
 RUN a2enmod setenvif headers security2 deflate filter expires rewrite include ext_filter
-
-# Enable custom parameters
-COPY dockerpress.ini /usr/local/etc/php/conf.d/dockerpress.ini
 
 # Enable Apache Configs
 COPY dockerpress.conf /etc/apache2/conf-available/dockerpress.conf
