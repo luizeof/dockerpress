@@ -43,3 +43,5 @@ echo '' > /etc/cron.d/dockerpress
 chmod 644 /etc/cron.d/dockerpress
 service cron start
 service cron reload
+
+exec "$@"
