@@ -59,7 +59,7 @@ if $(wp core is-installed); then
     wp redis status
 fi
 
-echo '' > /etc/cron.d/dockerpress
+echo '' >> /etc/cron.d/dockerpress
 chmod 644 /etc/cron.d/dockerpress
 service cron start
 service cron reload
