@@ -17,7 +17,7 @@ ENV WP_LOCALE "pt_BR"
 VOLUME /var/www/html
 
 RUN apt-get update ; \
-    apt-get install -y --no-install-recommends sudo \
+    apt-get install -y sudo \
     apache2 \
 		libjpeg-dev \
 		libmagickwand-dev \
@@ -89,17 +89,6 @@ RUN apt-get update ; \
   apcu \
   memcached ; \
 	\
-  # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
-	apt-mark auto '.*' > /dev/null; \
-	apt-mark manual $savedAptMark; \
-	ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
-		| awk '/=>/ { print $3 }' \
-		| sort -u \
-		| xargs -r dpkg-query -S \
-		| cut -d: -f1 \
-		| sort -u \
-		| xargs -rt apt-mark manual; \
-	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
@@ -117,8 +106,6 @@ RUN { \
 
 # https://wordpress.org/support/article/editing-wp-config-php/#configure-error-logging
 RUN { \
-# https://www.php.net/manual/en/errorfunc.constants.php
-# https://github.com/docker-library/wordpress/issues/420#issuecomment-517839670
 		echo 'error_reporting = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_RECOVERABLE_ERROR'; \
 		echo 'display_errors = Off'; \
 		echo 'display_startup_errors = Off'; \
