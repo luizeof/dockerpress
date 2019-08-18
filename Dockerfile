@@ -60,6 +60,7 @@ RUN apt-get update ; \
 	; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr; \
+  \
 	docker-php-ext-install -j "$(nproc)" \
 		bcmath \
 		exif \
@@ -75,16 +76,18 @@ RUN apt-get update ; \
 		zip \
 	; \
   printf "\n" | printf "\n" | pecl install redis ; \
+  \
 	pecl install imagick-3.4.4 \
-  apcu-5.1.11 \
-  memcached ; \
+    apcu-5.1.11 \
+    memcached \
+  ; \
 	docker-php-ext-enable imagick \
-  bcmath \
-  redis \
-  opcache \
-  apcu \
-  memcached ; \
-	\
+    bcmath \
+    redis \
+    opcache \
+    apcu \
+    memcached \
+	; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
