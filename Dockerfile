@@ -16,18 +16,11 @@ ENV WP_LOCALE "pt_BR"
 
 VOLUME /var/www/html
 
-
-# install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
-RUN set -ex; \
-	\
-	savedAptMark="$(apt-mark showmanual)"; \
-	\
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends sudo \
 		libjpeg-dev \
 		libmagickwand-dev \
 		libpng-dev \
-    sudo \
     software-properties-common \
     build-essential \
     curl \
