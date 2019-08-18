@@ -19,45 +19,45 @@ VOLUME /var/www/html
 RUN apt-get update \
     ; \
     apt-get install -y sudo \
-    apache2 \
-		libjpeg-dev \
-		libmagickwand-dev \
-		libpng-dev \
     software-properties-common \
     build-essential \
+    apache2 \
+    libapache2-mod-security2 \
+    modsecurity-crs \
     curl \
     tcl \
-    zlib1g-dev \
     cron \
+    bzip2 \
+    tidy \
+    wget \
+    nano \
+    htop \
+    zip \
+    git \
+    csstidy \
+    unzip \
     g++ \
+    zlib1g-dev \
+    libjpeg-dev \
+		libmagickwand-dev \
+		libpng-dev \
     libz-dev \
     libpq-dev \
     libfreetype6-dev \
     libcurl4-openssl-dev \
     libaprutil1-dev \
     libssl-dev \
-    bzip2 \
-    csstidy \
     libfreetype6-dev \
     libicu-dev \
     libldap2-dev \
     libmemcached-dev \
     libxml2-dev \
     libz-dev \
-    tidy \
-    libapache2-mod-security2 \
-    modsecurity-crs \
-    wget \
-    nano \
-    htop \
-    zip \
+		libzip-dev \
     mariadb-client \
-    git \
-    unzip \
     libmagickwand-dev \
     imagemagick \
     ghostscript \
-		libzip-dev \
 	; \
 	\
 	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr ; \
