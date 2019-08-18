@@ -18,6 +18,7 @@ VOLUME /var/www/html
 
 RUN apt-get update ; \
     apt-get install -y --no-install-recommends sudo \
+    apache2 \
 		libjpeg-dev \
 		libmagickwand-dev \
 		libpng-dev \
