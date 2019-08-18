@@ -20,8 +20,8 @@ if [ -n "$VULN_API_TOKEN" ]; then
   sed -i -e "s/VIRTUAL_HOST/$VIRTUAL_HOST/g" /usr/bin/wpcli-vuln
   wp package install git@github.com:10up/wp-vulnerability-scanner.git
   wp config set VULN_API_TOKEN $VULN_API_TOKEN --add --type=constant
-  echo '4 25 * * * root wpcli-vuln-generate' > /etc/cron.d/luizeof
-  echo '5 45 * * * root wpcli-vuln-send-report' > /etc/cron.d/luizeof
+  echo '4 25 * * * root wpcli-vuln-generate' > /etc/cron.d/dockerpress
+  echo '5 45 * * * root wpcli-vuln-send-report' > /etc/cron.d/dockerpress
 fi
 
 if $(wp core is-installed); then
@@ -37,8 +37,8 @@ if $(wp core is-installed); then
     wp redis status
 fi
 
-echo '' > /etc/cron.d/luizeof
-chmod 644 /etc/cron.d/luizeof
+echo '' > /etc/cron.d/dockerpress
+chmod 644 /etc/cron.d/dockerpress
 service cron start
 service cron reload
 

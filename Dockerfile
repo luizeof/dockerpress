@@ -2,7 +2,7 @@ FROM wordpress:php7.3-apache
 
 LABEL name="DockerPress"
 LABEL version="1.0.0"
-LABEL release="2019-06-24"
+LABEL release="2019-08-19"
 
 # Redis Defaults
 ENV WP_REDIS_DATABASE 2
@@ -97,15 +97,15 @@ RUN docker-php-ext-install exif
 RUN a2enmod setenvif headers security2 deflate filter expires rewrite include ext_filter
 
 # Enable custom parameters
-COPY luizeof.ini /usr/local/etc/php/conf.d/luizeof.ini
+COPY dockerpress.ini /usr/local/etc/php/conf.d/dockerpress.ini
 
 # Enable Apache Configs
-COPY luizeof-cache.conf /etc/apache2/conf-available/luizeof-cache.conf
-RUN a2enconf luizeof-cache
+COPY dockerpress.conf /etc/apache2/conf-available/dockerpress.conf
+RUN a2enconf dockerpress
 
 # Setting up crontab
-COPY luizeof.cron /etc/cron.d/luizeof
-RUN chmod +x /etc/cron.d/luizeof
+COPY dockerpress.cron /etc/cron.d/dockerpress
+RUN chmod +x /etc/cron.d/dockerpress
 
 # Installing Apache mod-pagespeed
 RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
