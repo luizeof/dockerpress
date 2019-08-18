@@ -106,6 +106,9 @@ RUN pecl install \
 		apcu-5.1.11 \
 		memcached
 
+RUN pecl install imagick-3.4.4
+
+
 # Enable Extra modules
 RUN docker-php-ext-enable \
     bcmath \
