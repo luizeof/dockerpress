@@ -1,6 +1,6 @@
 #!/bin/bash
 
-exec /usr/local/bin/docker-entrypoint.sh "$@"
+exec /usr/local/bin/docker-entrypoint.sh
 
 # Setup wp-cli
 echo "Setting up wp-cli..."
