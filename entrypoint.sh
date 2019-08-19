@@ -47,6 +47,7 @@ if [ ! -e wp-config.php ]; then
 fi
 
 if [ ! -e /var/www/html/.htaccess ]; then
+  echo ".htaccess not found, copying now ..."
   cp -f /var/www/.htaccess-template /var/www/html/.htaccess
   chown www-data:www-data /var/www/html/.htaccess
 fi
