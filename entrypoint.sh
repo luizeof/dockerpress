@@ -17,15 +17,23 @@ chown -R www-data:www-data /var/www/html/
 
 if [ ! -e wp-config.php ]; then
 
+  echo "Wordpress not found, downloading latest version ..."
   wp core download --locale=$WP_LOCALE --path=/var/www/html
+
+  echo "Creating wp-config.file ..."
   wp config create --dbname=$WORDPRESS_DB_NAME \
                    --dbuser=$WORDPRESS_DB_USER \
                    --dbpass=$WORDPRESS_DB_PASSWORD \
+                   --dbhost=$WORDPRESS_DB_HOST \
                    --locale=$WP_LOCALE \
                    --skip-check \
                    --path=/var/www/html
+
+  echo "Shuffling wp-config.php salts ..."
   wp config shuffle-salts
+  echo "Creating $WORDPRESS_DB_NAME database on if not exists ..."
   wp db query "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
+  echo "Installing Wordpress at $VIRTUAL_HOST ..."
   wp core install --url=$VIRTUAL_HOST \
                   --title=DockerPress \
                   --admin_user=dockerpress \
@@ -33,6 +41,7 @@ if [ ! -e wp-config.php ]; then
                   --admin_email=dockerpress@dockerpress.com.br \
                   --skip-email \
                   --path=/var/www/html
+  echo "Done Installing."
 fi
 
 wp config set WP_SITEURL "https://$VIRTUAL_HOST" --add --type=constant
