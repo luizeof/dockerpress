@@ -28,8 +28,8 @@ if [ ! -e wp-config.php ]; then
                    --locale=$WP_LOCALE \
                    --skip-check \
                    --path=/var/www/html
-                   --extra-php "
-                   
+                   --extra-php << "
+
                      if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
                          $_SERVER['HTTPS'] = '1';
 
