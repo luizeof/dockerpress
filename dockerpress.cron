@@ -1,10 +1,8 @@
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-*/2 * * * * root /usr/local/bin/wpcli-run-schedule
-*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler
-* 5 * * * root /usr/local/bin/wpcli-clear-scheduler-log
-1 20 * * * root /usr/local/bin/wpcli-media-regenerate
-2 30 * * * root /usr/local/bin/wp transient delete --expired --path=/var/www/html
+
+
+
 0 10 * * * root /usr/local/bin/wp cache flush --path=/var/www/html
 0 30 * * * root /usr/local/bin/wp comment delete $(/usr/local/bin/wp comment list --status=spam --format=ids) --path=/var/www/html

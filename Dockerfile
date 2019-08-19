@@ -13,6 +13,9 @@ ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 ENV ADMIN_EMAIL "webmaster@localhost"
 ENV WP_POST_REVISIONS true
 ENV WP_LOCALE "pt_BR"
+ENV CRON_ACTIONSCHEDULER 1
+ENV CRON_MEDIA_REGENERATE 1
+ENV CRON_CLEAR_TRANSIENT 1
 
 # Setting up crontab
 COPY dockerpress.cron /etc/cron.d/dockerpress

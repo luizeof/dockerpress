@@ -48,6 +48,20 @@ if [ -n "$VULN_API_TOKEN" ]; then
   echo '5 45 * * * root wpcli-vuln-send-report' >> /etc/cron.d/dockerpress
 fi
 
+if [ "$CRON_ACTIONSCHEDULER" -eq 1 ]; then
+  echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule' >> /etc/cron.d/dockerpress
+  echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >> /etc/cron.d/dockerpress
+  echo '* 5 * * * root /usr/local/bin/wpcli-clear-scheduler-log' >> /etc/cron.d/dockerpress
+fi
+
+if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
+  echo '1 20 * * * root /usr/local/bin/wpcli-media-regenerate' >> /etc/cron.d/dockerpress
+fi
+
+if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
+  echo '2 30 * * * root /usr/local/bin/wp transient delete --expired --path=/var/www/html' >> /etc/cron.d/dockerpress
+fi
+
 if $(wp core is-installed); then
   wp config set WP_CACHE true --raw --add --type=constant
   wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
