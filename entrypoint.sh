@@ -46,6 +46,11 @@ if [ ! -e wp-config.php ]; then
   fi
 fi
 
+if [ ! -e /var/www/html/.htaccess ]; then
+  cp -f /var/www/.htaccess-template /var/www/html/.htaccess
+  chown www-data:www-data /var/www/html/.htaccess
+fi
+
 wp config set WP_SITEURL "https://$VIRTUAL_HOST" --add --type=constant
 wp config set WP_HOME "https://$VIRTUAL_HOST" --add --type=constant
 

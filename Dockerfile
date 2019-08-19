@@ -17,6 +17,8 @@ ENV CRON_ACTIONSCHEDULER 1
 ENV CRON_MEDIA_REGENERATE 1
 ENV CRON_CLEAR_TRANSIENT 1
 
+COPY .htaccess /var/www/.htaccess-template
+
 # Setting up crontab
 COPY dockerpress.cron /etc/cron.d/dockerpress
 RUN chmod +x /etc/cron.d/dockerpress
