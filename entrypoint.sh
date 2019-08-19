@@ -44,6 +44,13 @@ if [ ! -e wp-config.php ]; then
                   --path=/var/www/html
     echo "Done Installing."
   fi
+
+  echo "// If we are behind a proxy server and using HTTPS, we need to alert Wordpress of that fact"
+  echo "// see also http://codex.wordpress.org/Administration_Over_SSL#Using_a_Reverse_Proxy"
+  echo "if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {"
+  echo "	$_SERVER['HTTPS'] = 'on';"
+  echo "}"
+
 fi
 
 if [ ! -e /var/www/html/.htaccess ]; then
