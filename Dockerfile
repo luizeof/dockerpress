@@ -16,8 +16,10 @@ ENV WP_LOCALE "pt_BR"
 ENV CRON_ACTIONSCHEDULER 1
 ENV CRON_MEDIA_REGENERATE 1
 ENV CRON_CLEAR_TRANSIENT 1
+ENV WP_DEBUG false
 
 COPY .htaccess /var/www/.htaccess-template
+COPY wp-config-sample.php /var/www/wp-config-sample.php
 
 # Setting up crontab
 COPY dockerpress.cron /etc/cron.d/dockerpress

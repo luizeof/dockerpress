@@ -21,31 +21,18 @@ if [ ! -e wp-config.php ]; then
   wp core download --locale=$WP_LOCALE --path=/var/www/html
 
   echo "Creating wp-config.file ..."
-  wp config create --dbname=$WORDPRESS_DB_NAME \
-                   --dbuser=$WORDPRESS_DB_USER \
-                   --dbpass=$WORDPRESS_DB_PASSWORD \
-                   --dbhost=$WORDPRESS_DB_HOST \
-                   --locale=$WP_LOCALE \
-                   --skip-check \
-                   --path=/var/www/html
-                   --extra-php << "
-
-                     if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
-                         $_SERVER['HTTPS'] = '1';
-
-                     if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-                         $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
-
-                   "
+  cp /var/www/wp-config-sample.php /var/www/html/wp-config.php
+  chown www-data:www-data /var/www/html/wp-config.php
 
   echo "Shuffling wp-config.php salts ..."
   wp config shuffle-salts
+
   if ! $(wp core is-installed); then
     echo "Creating $WORDPRESS_DB_NAME database on if not exists ..."
     wp db create
     echo "Installing Wordpress at $VIRTUAL_HOST ..."
     wp core install --url=$VIRTUAL_HOST \
-                  --title=DockerPress \
+                  --title=Wordpress \
                   --admin_user=dockerpress \
                   --admin_password=dockerpress \
                   --admin_email=dockerpress@dockerpress.com.br \
@@ -55,6 +42,12 @@ if [ ! -e wp-config.php ]; then
   fi
 
 fi
+
+wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant
+wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
+wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
+wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
+wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
 
 if [ ! -e /var/www/html/.htaccess ]; then
   echo ".htaccess not found, copying now ..."
@@ -89,18 +82,16 @@ if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
   echo '2 30 * * * root /usr/local/bin/wp transient delete --expired --path=/var/www/html' >> /etc/cron.d/dockerpress
 fi
 
-if $(wp core is-installed); then
-  wp config set WP_CACHE true --raw --add --type=constant
-  wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
-  wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
-  wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
-  rm -f /var/www/html/wp-content/object-cache.php
-  wp plugin install redis-cache --force --activate
-  wp redis enable
-  wp redis update-dropin
-  chmod +777 /var/www/html/wp-content/object-cache.php
-  wp redis status
-fi
+wp config set WP_CACHE true --raw --add --type=constant
+wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
+wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
+wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
+rm -f /var/www/html/wp-content/object-cache.php
+wp plugin install redis-cache --force --activate
+wp redis enable
+wp redis update-dropin
+chmod +777 /var/www/html/wp-content/object-cache.php
+wp redis status
 
 echo '' >> /etc/cron.d/dockerpress
 chmod 644 /etc/cron.d/dockerpress
