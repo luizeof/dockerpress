@@ -28,6 +28,14 @@ if [ ! -e wp-config.php ]; then
                    --locale=$WP_LOCALE \
                    --skip-check \
                    --path=/var/www/html
+                   --extra-php "
+                     if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+                         $_SERVER['HTTPS'] = '1';
+
+                     if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+                         $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+                     }
+                   "
 
   echo "Shuffling wp-config.php salts ..."
   wp config shuffle-salts
@@ -44,29 +52,6 @@ if [ ! -e wp-config.php ]; then
                   --path=/var/www/html
     echo "Done Installing."
   fi
-
-
-  awk '
-  				/^\/\*.*stop editing.*\*\/$/ && c == 0 {
-  					c = 1
-  					system("cat")
-  					if (ENVIRON["WORDPRESS_CONFIG_EXTRA"]) {
-  						print "// WORDPRESS_CONFIG_EXTRA"
-  						print ENVIRON["WORDPRESS_CONFIG_EXTRA"] "\n"
-  					}
-  				}
-  				{ print }
-  			' wp-config-sample.php > wp-config.php <<'EOPHP'
-  // If we're behind a proxy server and using HTTPS, we need to alert Wordpress of that fact
-  // see also http://codex.wordpress.org/Administration_Over_SSL#Using_a_Reverse_Proxy
-  if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
-      $_SERVER['HTTPS'] = '1';
-
-  if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-      $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
-  }
-EOPHP
-
 
 fi
 
