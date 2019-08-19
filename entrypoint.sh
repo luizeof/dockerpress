@@ -40,8 +40,8 @@ wp config set WP_HOME "https://$VIRTUAL_HOST" --add --type=constant
 
 # Enabling WPVULN Daily Report
 if [ -n "$VULN_API_TOKEN" ]; then
-  sed -i -e "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /usr/bin/wpcli-vuln-send-report
-  sed -i -e "s/VIRTUAL_HOST/$VIRTUAL_HOST/g" /usr/bin/wpcli-vuln-send-report
+  sed -i -e "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /usr/local/bin/wpcli-vuln-send-report
+  sed -i -e "s/VIRTUAL_HOST/$VIRTUAL_HOST/g" /usr/local/bin/wpcli-vuln-send-report
   wp package install git@github.com:10up/wp-vulnerability-scanner.git
   wp config set VULN_API_TOKEN $VULN_API_TOKEN --add --type=constant
   echo '4 25 * * * root wpcli-vuln-generate' >> /etc/cron.d/dockerpress
