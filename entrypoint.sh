@@ -43,6 +43,7 @@ if [ ! -e wp-config.php ]; then
 
 fi
 
+echo "Updating wp-config.php ..."
 wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant
 wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
 wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
