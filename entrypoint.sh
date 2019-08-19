@@ -47,7 +47,7 @@ if [ ! -e wp-config.php ]; then
     echo "Done Installing."
   fi
 
-  wp rewrite structure '/%postname%'
+  wp rewrite structure '/%postname%/'
 
 fi
 
@@ -102,12 +102,9 @@ chmod +777 /var/www/html/wp-content/object-cache.php
 
 echo '' >> /etc/cron.d/dockerpress
 chmod 644 /etc/cron.d/dockerpress
+
 service cron start
 service cron reload
-
-if $(wp plugin is-installed hello); then
-  wp plugin delete hello
-fi
 
 chown -R www-data:www-data /var/www/html/
 
