@@ -105,6 +105,10 @@ chmod 644 /etc/cron.d/dockerpress
 service cron start
 service cron reload
 
+if $(wp plugin is-installed hello); then
+  wp plugin delete hello
+fi
+
 chown -R www-data:www-data /var/www/html/
 
 #sysvbanner dockerpress
