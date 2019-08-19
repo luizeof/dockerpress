@@ -32,9 +32,10 @@ if [ ! -e wp-config.php ]; then
   wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
   wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
 
+  wp db create
+
   if ! $(wp core is-installed); then
     echo "Creating $WORDPRESS_DB_NAME database on if not exists ..."
-    wp db create
     echo "Installing Wordpress at $VIRTUAL_HOST ..."
     wp core install --url=$VIRTUAL_HOST \
                   --title=Wordpress \
@@ -47,7 +48,6 @@ if [ ! -e wp-config.php ]; then
   fi
 
   wp rewrite structure '/%postname%'
-  wp rewrite flush
 
 fi
 
