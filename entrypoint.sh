@@ -32,9 +32,8 @@ if [ ! -e wp-config.php ]; then
                      if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
                          $_SERVER['HTTPS'] = '1';
 
-                     if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+                     if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
                          $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
-                     }
                    "
 
   echo "Shuffling wp-config.php salts ..."
