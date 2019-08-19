@@ -41,6 +41,9 @@ if [ ! -e wp-config.php ]; then
     echo "Done Installing."
   fi
 
+  wp rewrite structure '/%postname%'
+  wp rewrite flush
+
 fi
 
 echo "Updating wp-config.php ..."
