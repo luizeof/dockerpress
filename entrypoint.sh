@@ -27,6 +27,11 @@ if [ ! -e wp-config.php ]; then
   echo "Shuffling wp-config.php salts ..."
   wp config shuffle-salts
 
+  wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant
+  wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
+  wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
+  wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
+
   if ! $(wp core is-installed); then
     echo "Creating $WORDPRESS_DB_NAME database on if not exists ..."
     wp db create
@@ -103,5 +108,7 @@ service cron start
 service cron reload
 
 chown -R www-data:www-data /var/www/html/
+
+#sysvbanner dockerpress
 
 exec "$@"
