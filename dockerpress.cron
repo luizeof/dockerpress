@@ -1,8 +1,5 @@
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-
-
-
 0 10 * * * root /usr/local/bin/wp cache flush --path=/var/www/html
 0 30 * * * root /usr/local/bin/wp comment delete $(/usr/local/bin/wp comment list --status=spam --format=ids) --path=/var/www/html
