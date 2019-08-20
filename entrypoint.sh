@@ -19,6 +19,15 @@ sed -i -e "s/MYPASSWORD/$WORDPRESS_DB_PASSWORD/g" /root/.my.cnf
 sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
 sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
 
+# Creating Wordpress Database
+if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
+  echo "Try create Database if not exists using root ..."
+  mysql -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
+else
+  echo "Try create Database if not exists using $WORDPRESS_DB_USER user ..."
+  mysql -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
+fi
+
 chown -R www-data:www-data /var/www/html/
 
 if [ ! -e wp-config.php ]; then
@@ -39,9 +48,7 @@ if [ ! -e wp-config.php ]; then
   wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
   wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
 
-  echo "Try create Database if not exists..."
-  wp db create
-
+  # if Wordpress is installed
   if ! $(wp core is-installed); then
     echo "Creating $WORDPRESS_DB_NAME database on if not exists ..."
     echo "Installing Wordpress at $VIRTUAL_HOST ..."
