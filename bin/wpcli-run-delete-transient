@@ -1,0 +1,3 @@
+#!/bin/sh
+
+wp transient delete --expired --path=/var/www/html

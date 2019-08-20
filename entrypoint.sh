@@ -72,26 +72,26 @@ fi
 
 # Enabling WPVULN Daily Report
 if [ -n "$VULN_API_TOKEN" ]; then
-  sed -i -e "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /usr/local/bin/wpcli-vuln-send-report
-  sed -i -e "s/VIRTUAL_HOST/$VIRTUAL_HOST/g" /usr/local/bin/wpcli-vuln-send-report
+  sed -i -e "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /usr/local/bin/wpcli-run-vuln-send-report
+  sed -i -e "s/VIRTUAL_HOST/$VIRTUAL_HOST/g" /usr/local/bin/wpcli-run-vuln-send-report
   wp package install git@github.com:10up/wp-vulnerability-scanner.git
   wp config set VULN_API_TOKEN $VULN_API_TOKEN --add --type=constant
-  echo '4 25 * * * root wpcli-vuln-generate' >> /etc/cron.d/dockerpress
-  echo '5 45 * * * root wpcli-vuln-send-report' >> /etc/cron.d/dockerpress
+  echo '4 25 * * * root wpcli-run-vuln-generate' >> /etc/cron.d/dockerpress
+  echo '5 45 * * * root wpcli-run-vuln-send-report' >> /etc/cron.d/dockerpress
 fi
 
 if [ "$CRON_ACTIONSCHEDULER" -eq 1 ]; then
   echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule' >> /etc/cron.d/dockerpress
   echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >> /etc/cron.d/dockerpress
-  echo '* 5 * * * root /usr/local/bin/wpcli-clear-scheduler-log' >> /etc/cron.d/dockerpress
+  echo '* 5 * * * root /usr/local/bin/wpcli-run-clear-scheduler-log' >> /etc/cron.d/dockerpress
 fi
 
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
-  echo '1 20 * * * root /usr/local/bin/wpcli-media-regenerate' >> /etc/cron.d/dockerpress
+  echo '1 20 * * * root /usr/local/bin/wpcli-run-media-regenerate' >> /etc/cron.d/dockerpress
 fi
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
-  echo '2 30 * * * root /usr/local/bin/wp transient delete --expired --path=/var/www/html' >> /etc/cron.d/dockerpress
+  echo '2 30 * * * root /usr/local/bin/wpcli-run-delete-transient' >> /etc/cron.d/dockerpress
 fi
 
 rm -f /var/www/html/wp-content/object-cache.php
