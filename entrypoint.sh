@@ -22,10 +22,16 @@ sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
 # Creating Wordpress Database
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
   echo "Try create Database if not exists using root ..."
-  mysql -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
+  mysql -h $WORDPRESS_DB_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
 else
   echo "Try create Database if not exists using $WORDPRESS_DB_USER user ..."
-  mysql -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
+  mysql -h $WORDPRESS_DB_HOST -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
+fi
+
+# Creating Wordpress User
+if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
+  echo "Try to create user $WORDPRESS_DB_USER with all privileges on $WORDPRESS_DB_NAME ..."
+  mysql -h $WORDPRESS_DB_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $WORDPRESS_DB_NAME.* TO $WORDPRESS_DB_USER@'%' IDENTIFIED BY '$WORDPRESS_DB_PASSWORD';";
 fi
 
 chown -R www-data:www-data /var/www/html/
