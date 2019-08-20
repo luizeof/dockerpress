@@ -13,6 +13,12 @@ curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-
 chmod +x /var/www/wp-cli.phar
 echo "Done"
 
+echo "Updating my.conf ..."
+sed -i -e "s/MYUSER/$WORDPRESS_DB_USER/g" /root/.my.cnf
+sed -i -e "s/MYPASSWORD/$WORDPRESS_DB_PASSWORD/g" /root/.my.cnf
+sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
+sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
+
 chown -R www-data:www-data /var/www/html/
 
 if [ ! -e wp-config.php ]; then
@@ -27,11 +33,13 @@ if [ ! -e wp-config.php ]; then
   echo "Shuffling wp-config.php salts ..."
   wp config shuffle-salts
 
+  echo "Updating Database Info on wp-config.file "
   wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant
   wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
   wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
   wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
 
+  echo "Try create Database if not exists..."
   wp db create
 
   if ! $(wp core is-installed); then
@@ -63,6 +71,7 @@ wp config set WP_CACHE true --raw --add --type=constant
 wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
 wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
 wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
+echo "wp-config.php updated."
 
 if [ ! -e /var/www/html/.htaccess ]; then
   echo ".htaccess not found, copying now ..."
