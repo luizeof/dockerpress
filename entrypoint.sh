@@ -13,7 +13,7 @@ curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-
 chmod +x /var/www/wp-cli.phar
 echo "Done"
 
-echo "Updating my.conf ..."
+echo "Updating my.cnf ..."
 sed -i -e "s/MYUSER/$WORDPRESS_DB_USER/g" /root/.my.cnf
 sed -i -e "s/MYPASSWORD/$WORDPRESS_DB_PASSWORD/g" /root/.my.cnf
 sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
