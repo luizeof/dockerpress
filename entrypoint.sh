@@ -32,6 +32,7 @@ fi
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
   echo "Try to create user $WORDPRESS_DB_USER with all privileges on $WORDPRESS_DB_NAME ..."
   mysql -h $WORDPRESS_DB_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $WORDPRESS_DB_NAME.* TO $WORDPRESS_DB_USER@'%' IDENTIFIED BY '$WORDPRESS_DB_PASSWORD';";
+  mysql -h $WORDPRESS_DB_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "FLUSH PRIVILEGES;";
 fi
 
 chown -R www-data:www-data /var/www/html/
@@ -80,10 +81,6 @@ wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
 wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
 wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
 wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
-wp config set WP_CACHE true --raw --add --type=constant
-wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
-wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
-wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
 echo "wp-config.php updated."
 
 if [ ! -e /var/www/html/.htaccess ]; then
@@ -92,8 +89,23 @@ if [ ! -e /var/www/html/.htaccess ]; then
   chown www-data:www-data /var/www/html/.htaccess
 fi
 
+# Redis Cache
+if [ -n "$WP_REDIS_HOST" ]; then
+  echo "Enabling Redis Cache ..."
+  wp config set WP_CACHE true --raw --add --type=constant
+  wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
+  wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
+  wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constants
+  rm -f /var/www/html/wp-content/object-cache.php
+  wp plugin install redis-cache --force --activate
+  wp redis enable
+  wp redis update-dropin
+  chmod +777 /var/www/html/wp-content/object-cache.php
+fi
+
 # Enabling WPVULN Daily Report
 if [ -n "$VULN_API_TOKEN" ]; then
+  echo "Enabling VULN Daily report ..."
   sed -i -e "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /usr/local/bin/wpcli-run-vuln-send-report
   sed -i -e "s/VIRTUAL_HOST/$VIRTUAL_HOST/g" /usr/local/bin/wpcli-run-vuln-send-report
   wp package install git@github.com:10up/wp-vulnerability-scanner.git
@@ -103,24 +115,21 @@ if [ -n "$VULN_API_TOKEN" ]; then
 fi
 
 if [ "$CRON_ACTIONSCHEDULER" -eq 1 ]; then
+  echo "CRON: Enabling Action Scheduler ..."
   echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule' >> /etc/cron.d/dockerpress
   echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >> /etc/cron.d/dockerpress
   echo '* 5 * * * root /usr/local/bin/wpcli-run-clear-scheduler-log' >> /etc/cron.d/dockerpress
 fi
 
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
+  echo "CRON: Enabling Media Regenerate ..."
   echo '1 20 * * * root /usr/local/bin/wpcli-run-media-regenerate' >> /etc/cron.d/dockerpress
 fi
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
+  echo "CRON: Enabling Clear Transients ..."
   echo '2 30 * * * root /usr/local/bin/wpcli-run-delete-transient' >> /etc/cron.d/dockerpress
 fi
-
-rm -f /var/www/html/wp-content/object-cache.php
-wp plugin install redis-cache --force --activate
-wp redis enable
-wp redis update-dropin
-chmod +777 /var/www/html/wp-content/object-cache.php
 
 echo '' >> /etc/cron.d/dockerpress
 chmod 644 /etc/cron.d/dockerpress
@@ -130,6 +139,8 @@ service cron reload
 
 chown -R www-data:www-data /var/www/html/
 
-#sysvbanner dockerpress
+unset MYSQL_ROOT_PASSWORD
+
+sysvbanner dockerpress
 
 exec "$@"
