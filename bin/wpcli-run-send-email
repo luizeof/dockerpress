@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ ! -n "$4" ]; then
-  wp eval "wp_mail( '$1', '$2', '<pre>$3</pre>' );" --path=/var/www/html
+  wp eval "wp_mail( '$1', '$2', '<pre>$3</pre>', array('Content-Type: text/html; charset=UTF-8') );" --path=/var/www/html
 else
-  wp eval "wp_mail( '$1', '$2', '<pre>$3</pre>', '', array('$4') );" --path=/var/www/html
+  wp eval "wp_mail( '$1', '$2', '<pre>$3</pre>', array('Content-Type: text/html; charset=UTF-8'), array('$4') );" --path=/var/www/html
 fi
