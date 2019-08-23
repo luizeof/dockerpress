@@ -101,7 +101,7 @@ if [ -n "$WP_REDIS_HOST" ]; then
     wp config set WP_REDIS_PASSWORD $WP_REDIS_PASSWORD --add --type=constant
   else
     echo "Redis password not set. Try to create a more secure redis setup."
-  end
+  fi
 
   rm -f /var/www/html/wp-content/object-cache.php
   wp plugin install redis-cache --force --activate
