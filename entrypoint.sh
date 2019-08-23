@@ -81,6 +81,22 @@ wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
 wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
 wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
 wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
+
+# Redis Cache
+if [ -n "$WP_REDIS_HOST" ]; then
+  wp config set WP_CACHE true --raw --add --type=constant
+  wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
+  wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
+  wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
+
+  if [ -n "$WP_REDIS_PASSWORD" ]; then
+    wp config set WP_REDIS_PASSWORD $WP_REDIS_PASSWORD --add --type=constant
+  else
+    echo "Redis password not set. Try to create a more secure redis setup."
+  fi
+fi
+
+
 echo "wp-config.php updated."
 
 if [ ! -e /var/www/html/.htaccess ]; then
@@ -92,17 +108,6 @@ fi
 # Redis Cache
 if [ -n "$WP_REDIS_HOST" ]; then
   echo "Enabling Redis Cache ..."
-  wp config set WP_CACHE true --raw --add --type=constant
-  wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
-  wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
-  wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
-
-  if [ -n "$WP_REDIS_PASSWORD" ]; then
-    wp config set WP_REDIS_PASSWORD $WP_REDIS_PASSWORD --add --type=constant
-  else
-    echo "Redis password not set. Try to create a more secure redis setup."
-  fi
-
   rm -f /var/www/html/wp-content/object-cache.php
   wp plugin install redis-cache --force --activate
   wp redis enable
