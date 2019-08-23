@@ -88,6 +88,7 @@ if [ -n "$WP_REDIS_HOST" ]; then
   wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
   wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
   wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
+  wp config set WP_CACHE_KEY_SALT $VIRTUAL_HOST --add --type=constant
 
   if [ -n "$WP_REDIS_PASSWORD" ]; then
     wp config set WP_REDIS_PASSWORD $WP_REDIS_PASSWORD --add --type=constant
