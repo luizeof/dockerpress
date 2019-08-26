@@ -20,7 +20,7 @@ sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
 sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
 
 echo "Sleeping 30s waiting mysql service ready..."
-sleep 10
+sleep 50
 
 # Creating Wordpress Database
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
