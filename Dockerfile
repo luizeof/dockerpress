@@ -29,7 +29,7 @@ RUN chmod +x /etc/cron.d/dockerpress
 COPY bin/* /usr/local/bin/
 RUN chmod -R +777 /usr/local/bin/
 
-COPY my.cnf /root/.my.cnf
+COPY my.cnf /root/.my.cnf.sample
 
 # Running container startup scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

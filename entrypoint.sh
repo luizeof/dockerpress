@@ -13,15 +13,6 @@ curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-
 chmod +x /var/www/wp-cli.phar
 echo "Done"
 
-echo "Updating my.cnf ..."
-sed -i -e "s/MYUSER/$WORDPRESS_DB_USER/g" /root/.my.cnf
-sed -i -e "s/MYPASSWORD/$WORDPRESS_DB_PASSWORD/g" /root/.my.cnf
-sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
-sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
-
-echo "Sleeping 30s waiting mysql service ready..."
-sleep 50
-
 # Creating Wordpress Database
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
   echo "Try create Database if not exists using root ..."
@@ -158,5 +149,12 @@ chown -R www-data:www-data /var/www/html/
 unset MYSQL_ROOT_PASSWORD
 
 sysvbanner dockerpress
+
+echo "Updating my.cnf ..."
+mv /root/.my.cnf.sample /root/.my.cnf
+sed -i -e "s/MYUSER/$WORDPRESS_DB_USER/g" /root/.my.cnf
+sed -i -e "s/MYPASSWORD/$WORDPRESS_DB_PASSWORD/g" /root/.my.cnf
+sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
+sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
 
 exec "$@"
