@@ -5,9 +5,6 @@ LABEL version="1.1.0"
 LABEL release="2019-08-19"
 
 # Redis Defaults
-ENV WP_REDIS_DATABASE 2
-ENV WP_REDIS_PORT 6379
-ENV WP_REDIS_HOST localhost
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 ENV ADMIN_EMAIL "webmaster@localhost"
