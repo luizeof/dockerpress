@@ -139,9 +139,9 @@ if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
 fi
 
 echo '' >> /etc/cron.d/dockerpress
+echo '' >> /etc/cron.d/dockerpress
 chmod 644 /etc/cron.d/dockerpress
 
-service cron start
 service cron reload
 
 chown -R www-data:www-data /var/www/html/
