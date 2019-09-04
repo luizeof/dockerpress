@@ -13,6 +13,12 @@ curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-
 chmod +x /var/www/wp-cli.phar
 echo "Done"
 
+# Setting up Mysql Optimize
+sed -i -e "s/WORDPRESS_DB_HOST/$WORDPRESS_DB_HOST/g" /usr/local/bin/mysql-optimize
+sed -i -e "s/WORDPRESS_DB_USER/$WORDPRESS_DB_USER/g" /usr/local/bin/mysql-optimize
+sed -i -e "s/WORDPRESS_DB_PASSWORD/$WORDPRESS_DB_PASSWORD/g" /usr/local/bin/mysql-optimize
+sed -i -e "s/WORDPRESS_DB_NAME/$WORDPRESS_DB_NAME/g" /usr/local/bin/mysql-optimize
+
 # Creating Wordpress Database
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
   echo "Try create Database if not exists using root ..."
@@ -158,5 +164,8 @@ sed -i -e "s/MYUSER/$WORDPRESS_DB_USER/g" /root/.my.cnf
 sed -i -e "s/MYPASSWORD/$WORDPRESS_DB_PASSWORD/g" /root/.my.cnf
 sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
 sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
+
+# Setting up MySQL
+mysql -e "SET SQL_MODE='ALLOW_INVALID_DATES';"
 
 exec "$@"
