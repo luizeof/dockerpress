@@ -125,7 +125,7 @@ if [ "$CRON_ACTIONSCHEDULER" -eq 1 ]; then
   echo "CRON: Enabling Action Scheduler ..."
   echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule' >> /etc/cron.d/dockerpress
   echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >> /etc/cron.d/dockerpress
-  echo '* 5 * * * root /usr/local/bin/wpcli-run-clear-scheduler-log' >> /etc/cron.d/dockerpress
+  echo '*/5 * * * * root /usr/local/bin/wpcli-run-clear-scheduler-log' >> /etc/cron.d/dockerpress
 fi
 
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
