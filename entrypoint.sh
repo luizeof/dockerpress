@@ -94,6 +94,8 @@ fi
 
 echo "wp-config.php updated."
 
+wp plugin install https://github.com/Prospress/action-scheduler/archive/3.0.0-beta-1.zip --force --activate
+
 if [ ! -e /var/www/html/.htaccess ]; then
   echo ".htaccess not found, copying now ..."
   cp -f /var/www/.htaccess-template /var/www/html/.htaccess
