@@ -1,0 +1,3 @@
+#!/bin/sh
+
+wp comment delete $(wp comment list --status=spam --format=ids --path=/var/www/html) --path=/var/www/html
