@@ -21,7 +21,7 @@ COPY wp-config-sample.php /var/www/wp-config-sample.php
 
 # Setting up crontab
 COPY dockerpress.cron /etc/cron.d/dockerpress
-RUN chmod +x /etc/cron.d/dockerpress
+RUN chmod 644 /etc/cron.d/dockerpress
 
 # Copy commands
 COPY bin/* /usr/local/bin/
