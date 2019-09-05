@@ -23,17 +23,17 @@ sed -i -e "s/WORDPRESS_DB_PORT/$WORDPRESS_DB_PORT/g" /usr/local/bin/mysql-optimi
 # Creating Wordpress Database
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
   echo "Try create Database if not exists using root ..."
-  mysql -h $WORDPRESS_DB_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
+  mysql -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
 else
   echo "Try create Database if not exists using $WORDPRESS_DB_USER user ..."
-  mysql -h $WORDPRESS_DB_HOST -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
+  mysql -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;";
 fi
 
 # Creating Wordpress User
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
   echo "Try to create user $WORDPRESS_DB_USER with all privileges on $WORDPRESS_DB_NAME ..."
-  mysql -h $WORDPRESS_DB_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $WORDPRESS_DB_NAME.* TO $WORDPRESS_DB_USER@'%' IDENTIFIED BY '$WORDPRESS_DB_PASSWORD';";
-  mysql -h $WORDPRESS_DB_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "FLUSH PRIVILEGES;";
+  mysql -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $WORDPRESS_DB_NAME.* TO $WORDPRESS_DB_USER@'%' IDENTIFIED BY '$WORDPRESS_DB_PASSWORD';";
+  mysql -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "FLUSH PRIVILEGES;";
 fi
 
 chown -R www-data:www-data /var/www/html/
@@ -169,8 +169,5 @@ sed -i -e "s/MYPASSWORD/$WORDPRESS_DB_PASSWORD/g" /root/.my.cnf
 sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
 sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
 sed -i -e "s/MYPORT/$WORDPRESS_DB_PORT/g" /root/.my.cnf
-
-# Setting up MySQL
-mysql -e "SET SQL_MODE='ALLOW_INVALID_DATES';"
 
 exec "$@"
