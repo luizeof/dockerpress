@@ -1,5 +1,4 @@
 SHELL=/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
-2 10 * * * root /usr/local/bin/wp cache flush --path=/var/www/html
 3 10 * * * root /usr/local/bin/mysql-optimize
