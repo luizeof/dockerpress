@@ -14,6 +14,7 @@ ENV CRON_ACTIONSCHEDULER 1
 ENV CRON_MEDIA_REGENERATE 1
 ENV CRON_CLEAR_TRANSIENT 1
 ENV WP_DEBUG false
+ENV WORDPRESS_DB_PORT 3306
 
 COPY .htaccess /var/www/.htaccess-template
 COPY wp-config-sample.php /var/www/wp-config-sample.php

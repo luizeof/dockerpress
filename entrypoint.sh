@@ -18,6 +18,7 @@ sed -i -e "s/WORDPRESS_DB_HOST/$WORDPRESS_DB_HOST/g" /usr/local/bin/mysql-optimi
 sed -i -e "s/WORDPRESS_DB_USER/$WORDPRESS_DB_USER/g" /usr/local/bin/mysql-optimize
 sed -i -e "s/WORDPRESS_DB_PASSWORD/$WORDPRESS_DB_PASSWORD/g" /usr/local/bin/mysql-optimize
 sed -i -e "s/WORDPRESS_DB_NAME/$WORDPRESS_DB_NAME/g" /usr/local/bin/mysql-optimize
+sed -i -e "s/WORDPRESS_DB_PORT/$WORDPRESS_DB_PORT/g" /usr/local/bin/mysql-optimize
 
 # Creating Wordpress Database
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
@@ -54,6 +55,8 @@ if [ ! -e wp-config.php ]; then
   wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
   wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
   wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
+  wp config set WORDPRESS_DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
+
 
   # if Wordpress is installed
   if ! $(wp core is-installed); then
