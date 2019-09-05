@@ -83,6 +83,7 @@ wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant
 wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
 wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
 wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
+wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
 wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
 
 # Redis Cache
@@ -167,6 +168,7 @@ sed -i -e "s/MYUSER/$WORDPRESS_DB_USER/g" /root/.my.cnf
 sed -i -e "s/MYPASSWORD/$WORDPRESS_DB_PASSWORD/g" /root/.my.cnf
 sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
 sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
+sed -i -e "s/MYPORT/$WORDPRESS_DB_PORT/g" /root/.my.cnf
 
 # Setting up MySQL
 mysql -e "SET SQL_MODE='ALLOW_INVALID_DATES';"
