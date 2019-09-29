@@ -157,9 +157,6 @@ COPY wp-config-sample.php /var/www/wp-config-sample.php
 COPY bin/* /usr/local/bin/
 RUN chmod -R +777 /usr/local/bin/
 
-COPY dockerpress.ini.sample /usr/local/etc/php/conf.d/dockerpress.ini
-RUN chmod +x /usr/local/etc/php/conf.d/dockerpress.ini
-
 COPY my.cnf /root/.my.cnf.sample
 
 # Running container startup scripts
