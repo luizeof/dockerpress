@@ -1,5 +1,9 @@
 FROM php:7.3-apache
 
+LABEL name="DockerPress"
+LABEL version="1.1.0"
+LABEL release="2019-08-19"
+
 # Install System Libraries
 RUN apt-get update \
     ; \
@@ -133,10 +137,6 @@ RUN a2enconf dockerpress
 RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
 RUN dpkg -i /home/mod-pagespeed-*.deb
 RUN apt-get -f install
-
-LABEL name="DockerPress"
-LABEL version="1.1.0"
-LABEL release="2019-08-19"
 
 # Redis Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
