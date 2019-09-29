@@ -81,7 +81,7 @@ RUN	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
 
 # set recommended opcache settings
 RUN { \
-		echo 'opcache.memory_consumption=256'; \
+		echo 'opcache.memory_consumption=768'; \
 		echo 'opcache.interned_strings_buffer=8'; \
 		echo 'opcache.max_accelerated_files=9999'; \
 		echo 'opcache.revalidate_freq=2'; \
@@ -90,24 +90,25 @@ RUN { \
 
 # set recommended PHP.ini settings
 RUN { \
-  	echo 'file_uploads = On'; \
-  	echo 'upload_max_filesize = 256M'; \
-  	echo 'post_max_size = 256M'; \
-  	echo 'max_execution_time = 999'; \
-  	echo 'memory_limit = 512M'; \
+  	echo 'file_uploads=On'; \
+  	echo 'upload_max_filesize=256M'; \
+  	echo 'post_max_size=256M'; \
+  	echo 'max_execution_time=300'; \
+  	echo 'memory_limit=512M'; \
+    echo 'expose_php=Off'; \
   } > /usr/local/etc/php/conf.d/php73-recommended.ini
 
 # https://wordpress.org/support/article/editing-wp-config-php/#configure-error-logging
 RUN { \
 		echo 'error_reporting = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_RECOVERABLE_ERROR'; \
-		echo 'display_errors = Off'; \
-		echo 'display_startup_errors = Off'; \
-		echo 'log_errors = On'; \
-		echo 'error_log = /dev/stderr'; \
-		echo 'log_errors_max_len = 1024'; \
-		echo 'ignore_repeated_errors = On'; \
-		echo 'ignore_repeated_source = Off'; \
-		echo 'html_errors = Off'; \
+		echo 'display_errors=Off'; \
+		echo 'display_startup_errors=Off'; \
+		echo 'log_errors=On'; \
+		echo 'error_log=/dev/stderr'; \
+		echo 'log_errors_max_len=1024'; \
+		echo 'ignore_repeated_errors=On'; \
+		echo 'ignore_repeated_source=Off'; \
+		echo 'html_errors=Off'; \
 	} > /usr/local/etc/php/conf.d/error-logging.ini
 
 # Enable apache modules
