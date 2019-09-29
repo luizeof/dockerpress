@@ -13,6 +13,12 @@ curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-
 chmod +x /var/www/wp-cli.phar
 echo "Done"
 
+# Setting up cron file
+touch /etc/cron.d/dockerpress
+echo "SHELL=/bin/bash" > /etc/cron.d/dockerpress
+echo "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" >> /etc/cron.d/dockerpress
+chmod 644 /etc/cron.d/dockerpress
+
 # Setting up Mysql Optimize
 sed -i -e "s/WORDPRESS_DB_HOST/$WORDPRESS_DB_HOST/g" /usr/local/bin/mysql-optimize
 sed -i -e "s/WORDPRESS_DB_USER/$WORDPRESS_DB_USER/g" /usr/local/bin/mysql-optimize
@@ -56,7 +62,6 @@ if [ ! -e wp-config.php ]; then
   wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
   wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
   wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
-
 
   # if Wordpress is installed
   if ! $(wp core is-installed); then
