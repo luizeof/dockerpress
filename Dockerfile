@@ -2,7 +2,7 @@ FROM php:7.3-apache
 
 LABEL name="DockerPress"
 LABEL version="1.1.0"
-LABEL release="2019-08-19"
+LABEL release="2019-10-03"
 
 # Install System Libraries
 RUN apt-get update \
