@@ -4,6 +4,18 @@ LABEL name="DockerPress"
 LABEL version="1.1.0"
 LABEL release="2019-10-03"
 
+# ENV Defaults
+ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
+ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
+ENV ADMIN_EMAIL "webmaster@localhost"
+ENV WP_POST_REVISIONS true
+ENV WP_LOCALE "pt_BR"
+ENV CRON_ACTIONSCHEDULER 1
+ENV CRON_MEDIA_REGENERATE 1
+ENV CRON_CLEAR_TRANSIENT 1
+ENV WP_DEBUG false
+ENV WORDPRESS_DB_PORT 3306
+
 # Install System Libraries
 RUN apt-get update \
     ; \
@@ -137,18 +149,6 @@ RUN a2enconf dockerpress
 RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
 RUN dpkg -i /home/mod-pagespeed-*.deb
 RUN apt-get -f install
-
-# Redis Defaults
-ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
-ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
-ENV ADMIN_EMAIL "webmaster@localhost"
-ENV WP_POST_REVISIONS true
-ENV WP_LOCALE "pt_BR"
-ENV CRON_ACTIONSCHEDULER 1
-ENV CRON_MEDIA_REGENERATE 1
-ENV CRON_CLEAR_TRANSIENT 1
-ENV WP_DEBUG false
-ENV WORDPRESS_DB_PORT 3306
 
 COPY .htaccess /var/www/.htaccess-template
 COPY wp-config-sample.php /var/www/wp-config-sample.php
