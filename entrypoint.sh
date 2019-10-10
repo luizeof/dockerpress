@@ -107,6 +107,13 @@ if [ -n "$WP_REDIS_HOST" ]; then
 fi
 
 
+# Enable Cloudflare Plugin
+if [ -n "$WP_CLOUDFLARE_HTTP2" ]; then
+  wp config set CLOUDFLARE_HTTP2_SERVER_PUSH_ACTIVE true --raw --add --type=constant
+  wp plugin install cloudflare --force
+fi
+
+
 echo "wp-config.php updated."
 
 wp plugin install https://github.com/Prospress/action-scheduler/archive/3.0.0-beta-1.zip --force --activate
