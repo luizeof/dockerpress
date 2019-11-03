@@ -147,19 +147,19 @@ fi
 
 if [ "$CRON_ACTIONSCHEDULER" -eq 1 ]; then
   echo "CRON: Enabling Action Scheduler ..."
-  echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule' >> /etc/cron.d/dockerpress
-  echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >> /etc/cron.d/dockerpress
-  echo '*/5 * * * * root /usr/local/bin/wpcli-run-clear-scheduler-log' >> /etc/cron.d/dockerpress
+  echo '*/8 * * * * root /usr/local/bin/wpcli-run-schedule' >> /etc/cron.d/dockerpress
+  echo '*/15 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >> /etc/cron.d/dockerpress
+  echo '50 * * * * root /usr/local/bin/wpcli-run-clear-scheduler-log' >> /etc/cron.d/dockerpress
 fi
 
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
   echo "CRON: Enabling Media Regenerate ..."
-  echo '1 20 * * * root /usr/local/bin/wpcli-run-media-regenerate' >> /etc/cron.d/dockerpress
+  echo '1 0 * * * root /usr/local/bin/wpcli-run-media-regenerate' >> /etc/cron.d/dockerpress
 fi
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
   echo "CRON: Enabling Clear Transients ..."
-  echo '2 30 * * * root /usr/local/bin/wpcli-run-delete-transient' >> /etc/cron.d/dockerpress
+  echo '30 2 * * * root /usr/local/bin/wpcli-run-delete-transient' >> /etc/cron.d/dockerpress
 fi
 
 echo '' >> /etc/cron.d/dockerpress
