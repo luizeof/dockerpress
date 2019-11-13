@@ -11,12 +11,16 @@ chown -R www-data:www-data $WP_CLI_PACKAGES_DIR
 rm -f /var/www/wp-cli.phar
 curl -o /var/www/wp-cli.phar https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x /var/www/wp-cli.phar
+rm -rf /var/www/wp-completion.bash
+curl -o /var/www/wp-completion.bash https://raw.githubusercontent.com/wp-cli/wp-cli/master/utils/wp-completion.bash
+source /var/www/wp-completion.bash
 echo "Done"
 
 # Setting up cron file
 touch /etc/cron.d/dockerpress
 echo "SHELL=/bin/bash" > /etc/cron.d/dockerpress
 echo "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" >> /etc/cron.d/dockerpress
+echo "" >> /etc/cron.d/dockerpress
 chmod 644 /etc/cron.d/dockerpress
 
 # Setting up Mysql Optimize
@@ -118,6 +122,11 @@ echo "wp-config.php updated."
 
 wp plugin install https://github.com/Prospress/action-scheduler/archive/3.0.0-beta-1.zip --force --activate
 
+echo "CRON: Enabling Action Scheduler ..."
+echo '*/8 * * * * root /usr/local/bin/wpcli-run-schedule' >> /etc/cron.d/dockerpress
+echo '*/15 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >> /etc/cron.d/dockerpress
+echo '50 * * * * root /usr/local/bin/wpcli-run-clear-scheduler-log' >> /etc/cron.d/dockerpress
+
 if [ ! -e /var/www/html/.htaccess ]; then
   echo ".htaccess not found, copying now ..."
   cp -f /var/www/.htaccess-template /var/www/html/.htaccess
@@ -145,13 +154,6 @@ if [ -n "$VULN_API_TOKEN" ]; then
   echo '5 45 * * * root wpcli-run-vuln-send-report' >> /etc/cron.d/dockerpress
 fi
 
-if [ "$CRON_ACTIONSCHEDULER" -eq 1 ]; then
-  echo "CRON: Enabling Action Scheduler ..."
-  echo '*/8 * * * * root /usr/local/bin/wpcli-run-schedule' >> /etc/cron.d/dockerpress
-  echo '*/15 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >> /etc/cron.d/dockerpress
-  echo '50 * * * * root /usr/local/bin/wpcli-run-clear-scheduler-log' >> /etc/cron.d/dockerpress
-fi
-
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
   echo "CRON: Enabling Media Regenerate ..."
   echo '1 0 * * * root /usr/local/bin/wpcli-run-media-regenerate' >> /etc/cron.d/dockerpress
@@ -172,8 +174,6 @@ chown -R www-data:www-data /var/www/html/
 
 unset MYSQL_ROOT_PASSWORD
 
-sysvbanner dockerpress
-
 echo "Updating my.cnf ..."
 mv /root/.my.cnf.sample /root/.my.cnf
 sed -i -e "s/MYUSER/$WORDPRESS_DB_USER/g" /root/.my.cnf
@@ -181,5 +181,7 @@ sed -i -e "s/MYPASSWORD/$WORDPRESS_DB_PASSWORD/g" /root/.my.cnf
 sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
 sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
 sed -i -e "s/MYPORT/$WORDPRESS_DB_PORT/g" /root/.my.cnf
+
+sysvbanner dockerpress
 
 exec "$@"
