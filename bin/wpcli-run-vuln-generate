@@ -1,0 +1,3 @@
+#!/bin/bash
+
+wp vuln status --format=yaml --path=/var/www/html > /var/www/vuln.txt
