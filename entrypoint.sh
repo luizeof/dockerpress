@@ -59,7 +59,17 @@ if [ ! -e wp-config.php ]; then
     --dbname=$WORDPRESS_DB_NAME \
     --dbuser=$WORDPRESS_DB_USER \
     --dbpass=$WORDPRESS_DB_PASSWORD \
-    --dbhost=$WORDPRESS_DB_HOST 
+    --dbhost=$WORDPRESS_DB_HOST \
+    --extra-php <<PHP
+
+if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+    $_SERVER['HTTPS'] = '1';
+
+if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+    $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+}
+
+PHP
 
   echo "Shuffling wp-config.php salts ..."
   wp config shuffle-salts
