@@ -54,17 +54,27 @@ if [ ! -e wp-config.php ]; then
   wp core download --locale=$WP_LOCALE --path=/var/www/html
 
   echo "Creating wp-config.file ..."
-  cp /var/www/wp-config-sample.php /var/www/html/wp-config.php
-  chown www-data:www-data /var/www/html/wp-config.php
+
+  wp config create \
+    --dbname=$WORDPRESS_DB_NAME \
+    --dbuser=$WORDPRESS_DB_USER \
+    --dbpass=$WORDPRESS_DB_PASSWORD \
+    --dbhost=$WORDPRESS_DB_HOST \
+    --extra-php <<PHP
+
+if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+    $_SERVER['HTTPS'] = '1';
+
+if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+    $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
+}
+
+PHP
 
   echo "Shuffling wp-config.php salts ..."
   wp config shuffle-salts
 
   echo "Updating Database Info on wp-config.file "
-  wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant
-  wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
-  wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
-  wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
   wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
 
   # if Wordpress is installed
