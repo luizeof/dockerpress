@@ -19,7 +19,8 @@ ENV WORDPRESS_DB_PORT 3306
 # Install System Libraries
 RUN apt-get update \
     ; \
-    apt-get install -y sudo \
+    apt-get install -y --no-install-recommends \
+    sudo \
     software-properties-common \
     build-essential \
     apache2 \
