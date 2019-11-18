@@ -55,21 +55,8 @@ if [ ! -e wp-config.php ]; then
 
   echo "Creating wp-config.file ..."
 
-  wp config create \
-    --dbname=$WORDPRESS_DB_NAME \
-    --dbuser=$WORDPRESS_DB_USER \
-    --dbpass=$WORDPRESS_DB_PASSWORD \
-    --dbhost=$WORDPRESS_DB_HOST \
-    --extra-php <<PHP
-
-if ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
-    $_SERVER['HTTPS'] = '1';
-
-if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
-    $_SERVER['HTTP_HOST'] = $_SERVER['HTTP_X_FORWARDED_HOST'];
-}
-
-PHP
+  cp /var/www/wp-config-sample.php /var/www/html/wp-config.php
+  chown www-data:www-data /var/www/html/wp-config.php
 
   echo "Shuffling wp-config.php salts ..."
   wp config shuffle-salts
