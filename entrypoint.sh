@@ -178,6 +178,9 @@ fi
 
 echo '' >>/etc/cron.d/dockerpress
 echo '' >>/etc/cron.d/dockerpress
+
+dos2unix /etc/cron.d/dockerpress
+
 chmod 644 /etc/cron.d/dockerpress
 
 service cron reload
