@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#### Setting Up MySQL Client Defaults
+
 echo "Updating my.cnf ..."
 mv /root/.my.cnf.sample /root/.my.cnf
 sed -i -e "s/MYUSER/$WORDPRESS_DB_USER/g" /root/.my.cnf
