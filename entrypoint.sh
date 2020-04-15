@@ -125,7 +125,7 @@ fi
 
 echo "wp-config.php updated."
 
-wp plugin install https://github.com/Prospress/action-scheduler/archive/3.0.0-beta-1.zip --force --activate
+wp plugin install https://github.com/woocommerce/action-scheduler/archive/3.1.4.zip --force --activate
 
 echo "CRON: Enabling Action Scheduler ..."
 echo '*/8 * * * * root /usr/local/bin/wpcli-run-schedule' >>/etc/cron.d/dockerpress
