@@ -70,7 +70,7 @@ if [ ! -e wp-config.php ]; then
   wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant
   wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
   wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
-  wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
+  wp config set DB_HOST "$WORDPRESS_DB_HOST:$WORDPRESS_DB_PORT" --add --type=constant
   wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
   wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
 
@@ -98,7 +98,7 @@ wp config set WP_HOME "https://$VIRTUAL_HOST" --add --type=constant
 wp config set DB_NAME $WORDPRESS_DB_NAME --add --type=constant
 wp config set DB_USER $WORDPRESS_DB_USER --add --type=constant
 wp config set DB_PASSWORD $WORDPRESS_DB_PASSWORD --add --type=constant
-wp config set DB_HOST $WORDPRESS_DB_HOST --add --type=constant
+wp config set DB_HOST "$WORDPRESS_DB_HOST:$WORDPRESS_DB_PORT" --add --type=constant
 wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
 wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
 
