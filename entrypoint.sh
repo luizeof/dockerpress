@@ -40,13 +40,6 @@ sed -i -e "s/WORDPRESS_DB_PASSWORD/$WORDPRESS_DB_PASSWORD/g" /usr/local/bin/mysq
 sed -i -e "s/WORDPRESS_DB_NAME/$WORDPRESS_DB_NAME/g" /usr/local/bin/mysql-optimize
 sed -i -e "s/WORDPRESS_DB_PORT/$WORDPRESS_DB_PORT/g" /usr/local/bin/mysql-optimize
 
-# Creating Wordpress User if MYSQL_ROOT_PASSWORD is provided
-if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
-  echo "Try to create user $WORDPRESS_DB_USER with all privileges on $WORDPRESS_DB_NAME ..."
-  mysql -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL PRIVILEGES ON $WORDPRESS_DB_NAME.* TO $WORDPRESS_DB_USER@'%' IDENTIFIED BY '$WORDPRESS_DB_PASSWORD';"
-  mysql -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
-fi
-
 # Creating Wordpress Database using root or another user / password
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
   echo "Try create Database if not exists using root ..."
