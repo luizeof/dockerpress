@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Starting Restore Database"
+wp-backup-db-down
+wp-backup-db-restore
+echo "Done."
+
+echo "Starting Restore Wordpress"
+wp-backup-app-down
+wp-backup-app-restore
+echo "Done."
+
+wp-local-update

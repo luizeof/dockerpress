@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ -e /var/www/app-latest.zip ]; then
+
+  rm -rf /var/www/html/*
+  rm -rf /var/www/html/*.*
+  rm -rf /var/www/html/.htaccess
+
+  unzip -od / /var/www/app-latest.zip
+
+  wp-local-update
+
+else
+  echo "WP Backup not found. Try run wp-backup-app-down ..."
+fi

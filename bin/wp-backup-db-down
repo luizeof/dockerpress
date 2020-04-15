@@ -1,0 +1,21 @@
+#!/bin/bash
+
+export AWS_ACCESS_KEY_ID="$(cat /var/www/.s3_access_key)"
+
+export AWS_SECRET_ACCESS_KEY="$(cat /var/www/.s3_secret_key)"
+
+export S3_BUCKET_NAME="$(cat /var/www/.s3_bucket_name)"
+
+export AWS_DEFAULT_REGION="us-east-1"
+
+export S3_REGION="us-east-1"
+
+BUCKET="$(cat /var/www/.wp_address)"
+
+rm -f /var/www/db-latest.gz
+
+aws s3 cp s3://$S3_BUCKET_NAME/$BUCKET/db-latest.gz /var/www/db-latest.gz
+
+echo "Backup DB file downloaded to /var/www/db-latest.gz"
+
+echo "Done"

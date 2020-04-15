@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo "Starting Backup"
+wp-backup-app-up
+echo "Done."
+
+echo "Starting Backup Database"
+wp-backup-db-up
+echo "Done."
