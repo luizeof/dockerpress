@@ -1,5 +1,33 @@
 #!/bin/bash
 
+#### Setting Up Env
+
+touch /var/www/.wp_address
+touch /var/www/.s3_access_key
+touch /var/www/.s3_region
+touch /var/www/.s3_secret_key
+touch /var/www/.s3_bucket_name
+touch /var/www/.wp_db_host
+touch /var/www/.wp_db_user
+touch /var/www/.wp_db_password
+touch /var/www/.wp_db_name
+touch /var/www/.wp_db_preffix
+touch /var/www/.wp_db_port
+
+echo $VIRTUAL_HOST >/var/www/.wp_address
+echo $WORDPRESS_DB_HOST >/var/www/.wp_db_host
+echo $WORDPRESS_DB_USER >/var/www/.wp_db_user
+echo $WORDPRESS_DB_PASSWORD >/var/www/.wp_db_password
+echo $WORDPRESS_DB_NAME >/var/www/.wp_db_name
+echo $WORDPRESS_DB_PORT >/var/www/.wp_db_port
+
+# S3 Backup Settigns
+
+echo $S3_ACCESS_KEY_ID >/var/www/.s3_access_key
+echo $AWS_DEFAULT_REGION >/var/www/.s3_region
+echo $S3_SECRET_ACCESS_KEY >/var/www/.s3_secret_key
+echo $S3_BUCKET_NAME >/var/www/.s3_bucket_name
+
 #### Setting Up MySQL Client Defaults
 
 echo "Updating my.cnf ..."
