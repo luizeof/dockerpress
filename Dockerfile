@@ -40,32 +40,31 @@ RUN apt-get update \
   unzip \
   git \
   csstidy \
-  unzip \
   g++ \
   zlib1g-dev \
   libjpeg-dev \
   libmagickwand-dev \
   libpng-dev \
+  libgif-dev \
+  libtiff-dev \
   libz-dev \
   libpq-dev \
   libfreetype6-dev \
   libcurl4-openssl-dev \
   libaprutil1-dev \
   libssl-dev \
-  libfreetype6-dev \
   libicu-dev \
   libldap2-dev \
   libmemcached-dev \
   libxml2-dev \
-  libz-dev \
   libzip-dev \
   mariadb-client \
+  imagemagick \
+  ghostscript \
+  groff \
   python \
   python-setuptools \
   python-pip \
-  libmagickwand-dev \
-  imagemagick \
-  ghostscript \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/* \
   && sudo apt-get clean
