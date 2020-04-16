@@ -18,7 +18,7 @@ ENV WORDPRESS_DB_PORT 3306
 
 # Install System Libraries
 RUN apt-get update \
-  ; \
+  && \
   apt-get install -y --no-install-recommends \
   sudo \
   software-properties-common \
@@ -37,6 +37,7 @@ RUN apt-get update \
   nano \
   htop \
   zip \
+  unzip \
   git \
   csstidy \
   unzip \
@@ -59,9 +60,17 @@ RUN apt-get update \
   libz-dev \
   libzip-dev \
   mariadb-client \
+  python \
+  python-setuptools \
+  python-pip \
   libmagickwand-dev \
   imagemagick \
-  ghostscript
+  ghostscript \
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/* \
+  && sudo apt-get clean
+
+RUN pip install awscli
 
 # Configure PHP and System Libraries
 RUN	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
