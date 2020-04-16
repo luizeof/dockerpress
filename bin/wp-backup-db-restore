@@ -10,7 +10,9 @@ if [ -e /var/www/db-latest.gz ]; then
 
   mysql </var/www/db-latest.sql
 
-  rm /var/www/db-latest.sql
+  rm -f /var/www/db-latest.sql
+
+  rm -f /var/www/db-latest.gz
 
 else
 

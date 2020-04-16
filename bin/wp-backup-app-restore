@@ -8,6 +8,10 @@ if [ -e /var/www/app-latest.zip ]; then
 
   unzip -od / /var/www/app-latest.zip
 
+  rm /var/www/app-latest.zip
+
+  chown -R www-data:www-data /var/www/html/
+
   wp-local-update
 
 else
