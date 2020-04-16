@@ -4,7 +4,7 @@ DUMP_START_TIME=$(date +"%Y-%m-%dT%H%M%SZ")
 
 cp /var/www/html/wp-config.php /var/www/html/wp-config.php.$DUMP_START_TIME
 
-cp /var/www/wp-config.php /var/www/html/wp-config.php
+cp -f /var/www/wp-config.php /var/www/html/wp-config.php
 
 wp-local-update
 
