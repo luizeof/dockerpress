@@ -34,6 +34,7 @@ RUN apt-get update \
   tidy \
   sysvbanner \
   wget \
+  less \
   nano \
   htop \
   zip \
