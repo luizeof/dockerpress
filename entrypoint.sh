@@ -60,8 +60,6 @@ touch /etc/cron.d/dockerpress
 echo "SHELL=/bin/bash" >/etc/cron.d/dockerpress
 echo "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" >>/etc/cron.d/dockerpress
 echo "" >>/etc/cron.d/dockerpress
-dos2unix /etc/cron.d/dockerpress
-chmod 644 /etc/cron.d/dockerpress
 
 # Setting up Mysql Optimize
 echo "Setting up MySL Optimize..."
