@@ -109,7 +109,7 @@ RUN	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
 # set recommended opcache settings
 RUN { \
   echo 'opcache.memory_consumption=768'; \
-  echo 'opcache.interned_strings_buffer=8'; \
+  echo 'opcache.interned_strings_buffer=16'; \
   echo 'opcache.max_accelerated_files=9999'; \
   echo 'opcache.revalidate_freq=2'; \
   echo 'opcache.fast_shutdown=1'; \
