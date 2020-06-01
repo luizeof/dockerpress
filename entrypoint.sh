@@ -204,6 +204,8 @@ dos2unix /etc/cron.d/dockerpress
 
 chmod 644 /etc/cron.d/dockerpress
 
+wp-setup-sentry
+
 service cron reload
 
 chown -R www-data:www-data /var/www/html/
