@@ -113,7 +113,7 @@ if [ ! -e wp-config.php ]; then
       --title=Wordpress \
       --admin_user=dockerpress \
       --admin_password=dockerpress \
-      --admin_email=dockerpress@dockerpress.com.br \
+      --admin_email=$ADMIN_EMAIL \
       --skip-email \
       --path=/var/www/html
     echo "Done Installing."
