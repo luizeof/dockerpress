@@ -199,7 +199,6 @@ if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
 fi
 
 echo '' >>/etc/cron.d/dockerpress
-echo '' >>/etc/cron.d/dockerpress
 
 dos2unix /etc/cron.d/dockerpress
 
