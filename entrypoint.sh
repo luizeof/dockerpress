@@ -211,6 +211,8 @@ chmod 644 /etc/cron.d/dockerpress
 
 wp-setup-sentry
 
+service apache2 reload
+
 service cron reload
 
 chown -R www-data:www-data /var/www/html/
