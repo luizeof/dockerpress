@@ -120,6 +120,10 @@ if [ ! -e wp-config.php ]; then
 
   wp rewrite structure '/%postname%/'
 
+else
+
+  echo 'wp-config.php file already exists.';
+
 fi
 
 echo "Updating wp-config.php ..."
