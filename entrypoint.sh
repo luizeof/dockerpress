@@ -115,6 +115,8 @@ if [ ! -e wp-config.php ]; then
       --skip-email \
       --path=/var/www/html
     echo "Done Installing."
+  else
+    echo 'Wordpress is already installed.';
   fi
 
   wp rewrite structure '/%postname%/'
