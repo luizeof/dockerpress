@@ -105,7 +105,6 @@ if [ ! -e wp-config.php ]; then
 
   # if Wordpress is installed
   if ! $(wp core is-installed); then
-    echo "Creating $WORDPRESS_DB_NAME database on if not exists ..."
     echo "Installing Wordpress at $VIRTUAL_HOST ..."
     wp core install --url=$VIRTUAL_HOST \
       --title=Wordpress \
