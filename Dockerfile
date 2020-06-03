@@ -7,7 +7,7 @@ LABEL release="2020-06-01"
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
-ENV ADMIN_EMAIL "webmaster@localhost"
+ENV ADMIN_EMAIL "webmaster@host.com"
 ENV WP_POST_REVISIONS true
 ENV WP_LOCALE "pt_BR"
 ENV CRON_ACTIONSCHEDULER 1
