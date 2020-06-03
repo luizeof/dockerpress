@@ -115,14 +115,14 @@ if [ ! -e wp-config.php ]; then
       --path=/var/www/html
     echo "Done Installing."
   else
-    echo 'Wordpress is already installed.';
+    echo 'Wordpress is already installed.'
   fi
 
   wp rewrite structure '/%postname%/'
 
 else
 
-  echo 'wp-config.php file already exists.';
+  echo 'wp-config.php file already exists.'
 
 fi
 
