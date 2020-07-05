@@ -161,6 +161,9 @@ echo "wp-config.php updated."
 
 wp plugin install https://github.com/woocommerce/action-scheduler/archive/3.1.4.zip --force --activate
 
+# Setting up wp-profile -> https://github.com/wp-cli/profile-command
+wp package install git@github.com:wp-cli/profile-command.git
+
 echo "CRON: Enabling Action Scheduler ..."
 echo '*/8 * * * * root /usr/local/bin/wpcli-run-schedule' >>/etc/cron.d/dockerpress
 echo '*/15 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >>/etc/cron.d/dockerpress
@@ -216,6 +219,8 @@ service apache2 reload
 service cron reload
 
 chown -R www-data:www-data /var/www/html/
+
+wp core verify-checksums
 
 sysvbanner dockerpress
 
