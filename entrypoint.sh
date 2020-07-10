@@ -187,8 +187,8 @@ if [ -n "$WP_REDIS_HOST" ]; then
   echo "Enabling Redis Cache ..."
   rm -f /var/www/html/wp-content/object-cache.php
   wp plugin install redis-cache --force --activate
-  wp redis enable
   wp redis update-dropin
+  wp redis enable
   chmod +777 /var/www/html/wp-content/object-cache.php
 fi
 
