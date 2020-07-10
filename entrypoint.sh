@@ -105,7 +105,7 @@ if [ ! -e wp-config.php ]; then
 
   # if Wordpress is installed
   if ! $(wp core is-installed); then
-    echo "Installing Wordpress at $VIRTUAL_HOST ..."
+    echo "Installing Wordpress for $VIRTUAL_HOST ..."
     wp core install --url=$VIRTUAL_HOST \
       --title=Wordpress \
       --admin_user=dockerpress \
