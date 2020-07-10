@@ -21,7 +21,7 @@ echo $WORDPRESS_DB_PASSWORD >/var/www/.wp_db_password
 echo $WORDPRESS_DB_NAME >/var/www/.wp_db_name
 echo $WORDPRESS_DB_PORT >/var/www/.wp_db_port
 
-# S3 Backup Settigns
+#### S3 Backup Settigns
 
 echo $S3_ACCESS_KEY_ID >/var/www/.s3_access_key
 echo $AWS_DEFAULT_REGION >/var/www/.s3_region
@@ -38,7 +38,8 @@ sed -i -e "s/MYHOST/$WORDPRESS_DB_HOST/g" /root/.my.cnf
 sed -i -e "s/MYDATABASE/$WORDPRESS_DB_NAME/g" /root/.my.cnf
 sed -i -e "s/MYPORT/$WORDPRESS_DB_PORT/g" /root/.my.cnf
 
-# Setup wp-cli
+#### Setup wp-cli
+
 echo "Setting up wp-cli..."
 rm -rf /var/www/.wp-cli/
 mkdir -p $WP_CLI_CACHE_DIR
@@ -54,14 +55,16 @@ curl -o /var/www/wp-completion.bash https://raw.githubusercontent.com/wp-cli/wp-
 source /var/www/wp-completion.bash
 echo "Done"
 
-# Setting up cron file
+### Setting up cron file
+
 echo "Setting up wp-cron..."
 touch /etc/cron.d/dockerpress
 echo "SHELL=/bin/bash" >/etc/cron.d/dockerpress
 echo "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" >>/etc/cron.d/dockerpress
 echo "" >>/etc/cron.d/dockerpress
 
-# Setting up Mysql Optimize
+#### Setting up Mysql Optimize
+
 echo "Setting up MySL Optimize..."
 sed -i -e "s/WORDPRESS_DB_HOST/$WORDPRESS_DB_HOST/g" /usr/local/bin/mysql-optimize
 sed -i -e "s/WORDPRESS_DB_USER/$WORDPRESS_DB_USER/g" /usr/local/bin/mysql-optimize
@@ -69,7 +72,8 @@ sed -i -e "s/WORDPRESS_DB_PASSWORD/$WORDPRESS_DB_PASSWORD/g" /usr/local/bin/mysq
 sed -i -e "s/WORDPRESS_DB_NAME/$WORDPRESS_DB_NAME/g" /usr/local/bin/mysql-optimize
 sed -i -e "s/WORDPRESS_DB_PORT/$WORDPRESS_DB_PORT/g" /usr/local/bin/mysql-optimize
 
-# Creating Wordpress Database using root or another user / password
+#### Creating Wordpress Database using root or another user / password
+
 if [ -n "$MYSQL_ROOT_PASSWORD" ]; then
   echo "Try create Database if not exists using root ..."
   mysql --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u root -p$MYSQL_ROOT_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
@@ -83,14 +87,17 @@ chown -R www-data:www-data /var/www/html/
 if [ ! -e wp-config.php ]; then
 
   echo "Wordpress not found, downloading latest version ..."
+
   wp core download --locale=$WP_LOCALE --path=/var/www/html
 
   echo "Creating wp-config.file ..."
 
   cp /var/www/wp-config-sample.php /var/www/html/wp-config.php
+
   chown www-data:www-data /var/www/html/wp-config.php
 
   echo "Shuffling wp-config.php salts ..."
+  
   wp config shuffle-salts
 
   echo "Updating Database Info on wp-config.file "
