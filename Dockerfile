@@ -168,7 +168,16 @@ COPY wp-config-sample.php /var/www/wp-config-sample.php
 COPY bin/* /usr/local/bin/
 RUN chmod -R +777 /usr/local/bin/
 
-COPY my.cnf /root/.my.cnf.sample
+RUN { \
+  echo '[client]'; \
+  echo 'user=MYUSER'; \
+  echo 'password=\'MYPASSWORD\''; \
+  echo 'host=MYHOST'; \
+  echo 'port=MYPORT'; \
+  echo ''; \
+  echo '[mysql]'; \
+  echo 'database=MYDATABASE'; \
+  } > /root/.my.cnf.sample
 
 # Running container startup scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
