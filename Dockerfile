@@ -177,6 +177,7 @@ RUN { \
   echo ''; \
   echo '[mysql]'; \
   echo 'database=MYDATABASE'; \
+  echo ''; \
   } > /root/.my.cnf.sample
 
 # Running container startup scripts
