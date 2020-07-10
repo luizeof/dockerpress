@@ -171,7 +171,7 @@ RUN chmod -R +777 /usr/local/bin/
 RUN { \
   echo '[client]'; \
   echo 'user=MYUSER'; \
-  echo 'password=\'MYPASSWORD\''; \
+  echo "password='MYPASSWORD'"; \
   echo 'host=MYHOST'; \
   echo 'port=MYPORT'; \
   echo ''; \
