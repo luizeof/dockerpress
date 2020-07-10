@@ -127,6 +127,14 @@ if [ ! -e wp-config.php ]; then
 
   wp rewrite structure '/%postname%/'
 
+  # Updating Plugins ...
+  echo "Updating plugins ..."
+  wp plugin update --all
+
+  # Updating Themes ...
+  echo "Updating themes ..."
+  wp theme update --all
+
 else
 
   echo 'wp-config.php file already exists.'
