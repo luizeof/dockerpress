@@ -40,6 +40,11 @@ RUN apt-get update \
   zip \
   unzip \
   git \
+  libwebp-dev \
+  webp \
+  libwebp6 \
+  libmagickwand-dev \
+  graphicsmagick \
   csstidy \
   g++ \
   zlib1g-dev \
@@ -73,7 +78,7 @@ RUN apt-get update \
 RUN pip install awscli
 
 # Configure PHP and System Libraries
-RUN	docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+RUN	docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr \
   ; \
   docker-php-ext-install -j "$(nproc)" \
   bcmath \
@@ -168,7 +173,17 @@ COPY wp-config-sample.php /var/www/wp-config-sample.php
 COPY bin/* /usr/local/bin/
 RUN chmod -R +777 /usr/local/bin/
 
-COPY my.cnf /root/.my.cnf.sample
+RUN { \
+  echo '[client]'; \
+  echo 'user=MYUSER'; \
+  echo "password='MYPASSWORD'"; \
+  echo 'host=MYHOST'; \
+  echo 'port=MYPORT'; \
+  echo ''; \
+  echo '[mysql]'; \
+  echo 'database=MYDATABASE'; \
+  echo ''; \
+  } > /root/.my.cnf.sample
 
 # Running container startup scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -178,4 +193,5 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 EXPOSE 80
 
 ENTRYPOINT ["entrypoint.sh"]
+
 CMD ["apache2-foreground"]
