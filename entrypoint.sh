@@ -131,6 +131,10 @@ if [ ! -e wp-config.php ]; then
   echo "Updating plugins ..."
   wp plugin update --all
 
+  # Remove unused Dolly
+  echo "Remove Dolly..."
+  wp plugin delete hello 
+
   # Updating Themes ...
   echo "Updating themes ..."
   wp theme update --all
