@@ -42,6 +42,7 @@ RUN apt-get update \
   git \
   libwebp-dev \
   webp \
+  graphicsmagick \
   csstidy \
   g++ \
   zlib1g-dev \
