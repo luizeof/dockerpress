@@ -42,6 +42,8 @@ RUN apt-get update \
   git \
   libwebp-dev \
   webp \
+  libwebp6 \
+  libmagickwand-dev \
   graphicsmagick \
   csstidy \
   g++ \
