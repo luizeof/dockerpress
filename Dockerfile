@@ -40,6 +40,8 @@ RUN apt-get update \
   zip \
   unzip \
   git \
+  libwebp-dev \
+  webp \
   csstidy \
   g++ \
   zlib1g-dev \
