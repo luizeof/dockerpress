@@ -218,7 +218,7 @@ fi
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
   echo "CRON: Enabling Media Regenerate ..."
   echo '1 0 * * * root /usr/local/bin/wpcli-run-media-regenerate' >>/etc/cron.d/dockerpress
-  wp plugin install regenerate-thumbnails
+  wp plugin install regenerate-thumbnails  --force --activate
 fi
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
