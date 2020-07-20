@@ -1,7 +1,7 @@
 FROM php:7.4-apache
 
 LABEL name="DockerPress"
-LABEL version="2.0.0"
+LABEL version="2.1.0"
 LABEL release="2020-07-20"
 
 # ENV Defaults
