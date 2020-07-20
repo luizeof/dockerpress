@@ -1,4 +1,4 @@
-FROM php:7.3-apache
+FROM php:7.4-apache
 
 LABEL name="DockerPress"
 LABEL version="2.0.0"
