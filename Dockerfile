@@ -96,7 +96,7 @@ RUN	docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --w
   ; \
   printf "\n" | printf "\n" | pecl install redis \
   ; \
-  pecl install imagick-3.4.4 \
+  pecl install imagick \
   apcu-5.1.11 \
   memcached \
   ; \
