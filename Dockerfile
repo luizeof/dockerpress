@@ -62,6 +62,7 @@ RUN apt-get update \
   libicu-dev \
   libldap2-dev \
   libmemcached-dev \
+  libonig-dev \
   libxml2-dev \
   libzip-dev \
   mariadb-client \
@@ -78,9 +79,9 @@ RUN apt-get update \
 RUN pip install awscli
 
 # Configure PHP and System Libraries
-RUN	docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr \
-  ; \
-  docker-php-ext-install -j "$(nproc)" \
+RUN	docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr
+
+RUN  docker-php-ext-install -j "$(nproc)" \
   bcmath \
   exif \
   gd \
