@@ -159,6 +159,7 @@ VOLUME /var/www/html
 
 # Enable Apache Configs
 COPY dockerpress.conf /etc/apache2/conf-available/dockerpress.conf
+
 RUN a2enconf dockerpress
 
 # Installing Apache mod-pagespeed
