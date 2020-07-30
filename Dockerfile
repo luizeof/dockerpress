@@ -123,7 +123,7 @@ RUN { \
 # set recommended PHP.ini settings
 RUN { \
   echo 'file_uploads=On'; \
-  echo 'upload_max_filesize=256M'; \
+  echo 'upload_max_filesize=512M'; \
   echo 'post_max_size=256M'; \
   echo 'max_execution_time=300'; \
   echo 'memory_limit=512M'; \
