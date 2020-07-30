@@ -226,6 +226,11 @@ if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
   echo '30 2 * * * root /usr/local/bin/wpcli-run-delete-transient' >>/etc/cron.d/dockerpress
 fi
 
+if [ -n "$AWS_ACCESS_KEY_ID" ]; then
+  echo "CRON: Enabling Automated S3 Backup ..."
+  echo '1 1 * * * root /usr/local/bin/wp-backup' >>/etc/cron.d/dockerpress
+fi
+
 echo '' >>/etc/cron.d/dockerpress
 
 dos2unix /etc/cron.d/dockerpress
