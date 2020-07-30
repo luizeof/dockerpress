@@ -65,6 +65,10 @@ RUN apt-get update \
   libxml2-dev \
   libzip-dev \
   mariadb-client \
+  libwebp-dev \
+  libjpeg62-turbo-dev \
+  libxpm-dev \
+  libfreetype6-dev \
   imagemagick \
   ghostscript \
   groff \
@@ -78,9 +82,18 @@ RUN apt-get update \
 RUN pip install awscli
 
 # Configure PHP and System Libraries
-RUN	docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr \
-  ; \
-  docker-php-ext-install -j "$(nproc)" \
+# RUN	docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr
+
+RUN docker-php-ext-configure gd \
+  --with-gd \
+  --with-webp-dir \
+  --with-jpeg-dir \
+  --with-png-dir \
+  --with-zlib-dir \
+  --with-xpm-dir \
+  --with-freetype-dir
+
+RUN docker-php-ext-install -j "$(nproc)" \
   bcmath \
   exif \
   gd \
