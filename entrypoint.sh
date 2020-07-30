@@ -1,5 +1,7 @@
 #!/bin/bash
 
+docker-php-ext-enable imagick 
+
 #### Setting Up Env
 
 touch /var/www/.wp_address
