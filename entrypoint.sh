@@ -187,9 +187,8 @@ wp plugin install https://github.com/woocommerce/action-scheduler/archive/3.1.4.
 wp package install git@github.com:wp-cli/profile-command.git
 
 echo "CRON: Enabling Action Scheduler ..."
-echo '*/8 * * * * root /usr/local/bin/wpcli-run-schedule' >>/etc/cron.d/dockerpress
-echo '*/15 * * * * root /usr/local/bin/wpcli-run-actionscheduler' >>/etc/cron.d/dockerpress
-echo '50 * * * * root /usr/local/bin/wpcli-run-clear-scheduler-log' >>/etc/cron.d/dockerpress
+echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule ' >>/etc/cron.d/dockerpress
+echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler ' >>/etc/cron.d/dockerpress
 
 if [ ! -e /var/www/html/.htaccess ]; then
   echo ".htaccess not found, copying now ..."
