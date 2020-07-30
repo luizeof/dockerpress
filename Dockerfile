@@ -102,9 +102,9 @@ RUN docker-php-ext-install -j "$(nproc)" \
   ; \
   pecl install imagick \
   apcu-5.1.11 \
-  memcached \
-  ; \
-  docker-php-ext-enable imagick \
+  memcached
+
+RUN docker-php-ext-enable imagick \
   bcmath \
   redis \
   opcache \
