@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Force this for PHP 7.4 compatibility
 docker-php-ext-enable imagick 
 
 #### Setting Up Env
