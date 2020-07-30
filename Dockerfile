@@ -82,16 +82,7 @@ RUN apt-get update \
 RUN pip install awscli
 
 # Configure PHP and System Libraries
-# RUN	docker-php-ext-configure gd --with-freetype-dir=/usr --with-png-dir=/usr --with-jpeg-dir=/usr --with-webp-dir=/usr
-
-RUN docker-php-ext-configure gd \
-  --with-gd \
-  --with-webp-dir \
-  --with-jpeg-dir \
-  --with-png-dir \
-  --with-zlib-dir \
-  --with-xpm-dir \
-  --with-freetype-dir
+RUN	docker-php-ext-configure gd --with-freetype --with-jpeg
 
 RUN docker-php-ext-install -j "$(nproc)" \
   bcmath \
