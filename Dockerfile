@@ -49,6 +49,7 @@ RUN apt-get update \
   zlib1g-dev \
   libjpeg-dev \
   libmagickwand-dev \
+  libxml2-dev \
   libpng-dev \
   libgif-dev \
   libtiff-dev \
@@ -74,6 +75,8 @@ RUN apt-get update \
   jpegoptim \ 
   optipng \
   pngquant \
+  libc-client-dev \
+  libjpeg-dev \
   gifsicle \
   groff \
   python \
