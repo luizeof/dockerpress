@@ -43,7 +43,6 @@ RUN apt-get update \
   libwebp-dev \
   webp \
   libwebp6 \
-  libmagickwand-dev \
   graphicsmagick \
   csstidy \
   g++ \
@@ -54,6 +53,7 @@ RUN apt-get update \
   libgif-dev \
   libtiff-dev \
   libz-dev \
+  inetutils-ping \
   libpq-dev \
   libfreetype6-dev \
   libcurl4-openssl-dev \
@@ -71,6 +71,10 @@ RUN apt-get update \
   libfreetype6-dev \
   imagemagick \
   ghostscript \
+  jpegoptim \ 
+  optipng \
+  pngquant \
+  gifsicle \
   groff \
   python \
   python-setuptools \
