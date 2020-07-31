@@ -165,6 +165,9 @@ COPY dockerpress.conf /etc/apache2/conf-available/dockerpress.conf
 
 RUN a2enconf dockerpress
 
+# Force this for PHP 7.4 compatibility
+RUN docker-php-ext-enable imagick 
+
 # Installing Apache mod-pagespeed
 RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
 RUN dpkg -i /home/mod-pagespeed-*.deb
