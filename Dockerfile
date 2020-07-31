@@ -89,12 +89,6 @@ RUN pip install awscli
 # Configure PHP and System Libraries
 RUN	docker-php-ext-configure gd --with-freetype --with-jpeg
 
-RUN printf "\n" | printf "\n" | pecl install redis \
-  ; \
-  pecl install imagick \
-  apcu-5.1.11 \
-  memcached
-
 RUN docker-php-ext-install -j "$(nproc)" \
   bcmath \
   exif \
@@ -108,6 +102,12 @@ RUN docker-php-ext-install -j "$(nproc)" \
   mysqli \
   opcache \
   zip 
+
+RUN printf "\n" | printf "\n" | pecl install redis \
+  ; \
+  pecl install imagick \
+  apcu-5.1.11 \
+  memcached
 
 RUN docker-php-ext-enable imagick \
   bcmath \
