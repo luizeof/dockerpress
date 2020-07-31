@@ -56,7 +56,6 @@ RUN apt-get update \
   libz-dev \
   inetutils-ping \
   libpq-dev \
-  libfreetype6-dev \
   libcurl4-openssl-dev \
   libaprutil1-dev \
   libssl-dev \
