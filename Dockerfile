@@ -106,7 +106,7 @@ RUN docker-php-ext-install -j "$(nproc)" \
 RUN printf "\n" | printf "\n" | pecl install redis \
   ; \
   pecl install imagick \
-  apcu-5.1.11 \
+  apcu \
   memcached
 
 RUN docker-php-ext-enable imagick \
