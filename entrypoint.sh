@@ -181,7 +181,7 @@ fi
 
 echo "wp-config.php updated."
 
-wp plugin install https://github.com/woocommerce/action-scheduler/archive/3.1.4.zip --force --activate
+wp plugin install https://github.com/woocommerce/action-scheduler/archive/3.1.6.zip --force --activate
 
 # Setting up wp-profile -> https://github.com/wp-cli/profile-command
 wp package install git@github.com:wp-cli/profile-command.git
