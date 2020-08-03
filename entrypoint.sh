@@ -182,7 +182,7 @@ fi
 echo "wp-config.php updated."
 
 echo "Installing action-scheduler ..."
-wp plugin install action-scheduler --force --activate
+# wp plugin install action-scheduler --force --activate
 
 # Setting up wp-profile -> https://github.com/wp-cli/profile-command
 wp package install git@github.com:wp-cli/profile-command.git
