@@ -240,8 +240,6 @@ dos2unix /etc/cron.d/dockerpress
 
 chmod 644 /etc/cron.d/dockerpress
 
-wp-setup-sentry
-
 service apache2 reload
 
 service cron reload
