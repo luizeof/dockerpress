@@ -182,10 +182,10 @@ fi
 echo "wp-config.php updated."
 
 echo "Installing action-scheduler ..."
-# wp plugin install action-scheduler --force --activate
+wp plugin install action-scheduler --force --activate
 
 # Setting up wp-profile -> https://github.com/wp-cli/profile-command
-# wp package install git@github.com:wp-cli/profile-command.git
+wp package install git@github.com:wp-cli/profile-command.git
 
 echo "CRON: Enabling Action Scheduler ..."
 echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule ' >>/etc/cron.d/dockerpress
@@ -221,7 +221,7 @@ fi
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
   echo "CRON: Enabling Media Regenerate ..."
   echo '1 0 * * * root /usr/local/bin/wpcli-run-media-regenerate' >>/etc/cron.d/dockerpress
-  # wp plugin install regenerate-thumbnails  --force --activate
+  wp plugin install regenerate-thumbnails  --force --activate
 fi
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
