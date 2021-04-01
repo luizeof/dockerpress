@@ -2,7 +2,7 @@ FROM php:7.4-apache
 
 LABEL name="DockerPress"
 LABEL version="2.1.0"
-LABEL release="2020-07-20"
+LABEL release="2021-04-01"
 
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
@@ -101,7 +101,7 @@ RUN docker-php-ext-install -j "$(nproc)" \
   opcache \
   mysqli \
   opcache \
-  zip 
+  zip
 
 RUN printf "\n" | printf "\n" | pecl install redis \
   ; \

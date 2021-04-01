@@ -100,7 +100,7 @@ if [ ! -e wp-config.php ]; then
   chown www-data:www-data /var/www/html/wp-config.php
 
   echo "Shuffling wp-config.php salts ..."
-  
+
   wp config shuffle-salts
 
   echo "Updating Database Info on wp-config.file "
