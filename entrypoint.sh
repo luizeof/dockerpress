@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Force this for PHP 7.4 compatibility
-docker-php-ext-enable imagick 
+docker-php-ext-enable imagick
 
 #### Setting Up Env
 
@@ -136,7 +136,7 @@ if [ ! -e wp-config.php ]; then
 
   # Remove unused Dolly
   echo "Remove Dolly..."
-  wp plugin delete hello 
+  wp plugin delete hello
 
   # Updating Themes ...
   echo "Updating themes ..."
@@ -163,10 +163,15 @@ if [ -n "$WP_REDIS_HOST" ]; then
   wp config set WP_CACHE true --raw --add --type=constant
   wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
   wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
-  wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
   wp config set WP_CACHE_KEY_SALT $VIRTUAL_HOST --add --type=constant
 
+  if [ -n "$WP_REDIS_PORT" ]; then
+    echo "Setting up redis port..."
+    wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
+  fi
+
   if [ -n "$WP_REDIS_PASSWORD" ]; then
+    echo "Setting up redis password..."
     wp config set WP_REDIS_PASSWORD $WP_REDIS_PASSWORD --add --type=constant
   else
     echo "Redis password not set. Try to create a more secure redis setup."
@@ -175,6 +180,7 @@ fi
 
 # Enable Cloudflare Plugin
 if [ -n "$WP_CLOUDFLARE_HTTP2" ]; then
+  echo "Enable the Cloudflare HTTTP2..."
   wp config set CLOUDFLARE_HTTP2_SERVER_PUSH_ACTIVE true --raw --add --type=constant
   wp plugin install cloudflare --force
 fi
@@ -227,11 +233,6 @@ fi
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
   echo "CRON: Enabling Clear Transients ..."
   echo '30 2 * * * root /usr/local/bin/wpcli-run-delete-transient' >>/etc/cron.d/dockerpress
-fi
-
-if [ -n "$AWS_ACCESS_KEY_ID" ]; then
-  echo "CRON: Enabling Automated S3 Backup ..."
-  echo '1 1 * * * root /usr/local/bin/wp-backup' >>/etc/cron.d/dockerpress
 fi
 
 echo '' >>/etc/cron.d/dockerpress
