@@ -240,6 +240,10 @@ dos2unix /etc/cron.d/dockerpress
 
 chmod 644 /etc/cron.d/dockerpress
 
+if [ -n "$ENABLE_MOZILLA_OBSERVATORY" ]; then
+  a2enconf mozilla-observatory
+fi
+
 service apache2 reload
 
 service cron reload

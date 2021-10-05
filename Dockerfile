@@ -166,9 +166,11 @@ RUN a2enmod setenvif \
 # Default Volume for Apache
 VOLUME /var/www/html
 
-# Enable Apache Configs
+# Copy Apache Configs
 COPY dockerpress.conf /etc/apache2/conf-available/dockerpress.conf
+COPY mozilla-observatory.conf /etc/apache2/conf-available/mozilla-observatory.conf
 
+# Enable Apache Configs
 RUN a2enconf dockerpress
 
 # Installing Apache mod-pagespeed
