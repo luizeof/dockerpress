@@ -1,3 +1,3 @@
-#!/bin/sh
+#!/bin/bash
 
 mysqlcheck -h WORDPRESS_DB_HOST -u WORDPRESS_DB_USER -pWORDPRESS_DB_PASSWORD WORDPRESS_DB_NAME --optimize --auto-repair
