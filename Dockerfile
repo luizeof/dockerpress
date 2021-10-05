@@ -1,8 +1,8 @@
 FROM php:7.4-apache
 
 LABEL name="DockerPress"
-LABEL version="2.1.0"
-LABEL release="2021-04-01"
+LABEL version="2.2.0"
+LABEL release="2021-10-05"
 
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
