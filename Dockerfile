@@ -81,8 +81,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && sudo apt-get clean
 
-RUN pip install awscli
-
 # Configure PHP and System Libraries
 RUN	docker-php-ext-configure gd --with-freetype --with-jpeg
 
