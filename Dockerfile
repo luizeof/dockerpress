@@ -70,7 +70,7 @@ RUN apt-get update \
   libfreetype6-dev \
   imagemagick \
   ghostscript \
-  jpegoptim \ 
+  jpegoptim \
   optipng \
   pngquant \
   libc-client-dev \
@@ -119,7 +119,7 @@ RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
 RUN { \
   echo 'opcache.memory_consumption=768'; \
   echo 'opcache.interned_strings_buffer=16'; \
-  echo 'opcache.max_accelerated_files=9999'; \
+  echo 'opcache.max_accelerated_files=99999'; \
   echo 'opcache.revalidate_freq=2'; \
   echo 'opcache.fast_shutdown=1'; \
   } > /usr/local/etc/php/conf.d/opcache-recommended.ini
@@ -178,6 +178,7 @@ COPY wp-config-sample.php /var/www/wp-config-sample.php
 
 # Copy commands
 COPY bin/* /usr/local/bin/
+# Fix Permissions
 RUN chmod -R +777 /usr/local/bin/
 
 RUN { \
