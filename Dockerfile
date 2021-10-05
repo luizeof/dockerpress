@@ -162,8 +162,8 @@ RUN a2enmod setenvif \
 VOLUME /var/www/html
 
 # Copy Apache Configs
-COPY dockerpress.conf /etc/apache2/conf-available/dockerpress.conf
-COPY mozilla-observatory.conf /etc/apache2/conf-available/mozilla-observatory.conf
+COPY ./apache/conf/dockerpress.conf /etc/apache2/conf-available/dockerpress.conf
+COPY ./apache/conf/mozilla-observatory.conf /etc/apache2/conf-available/mozilla-observatory.conf
 
 # Enable Apache Configs
 RUN a2enconf dockerpress
