@@ -77,9 +77,6 @@ RUN apt-get update \
   libjpeg-dev \
   gifsicle \
   groff \
-  python \
-  python-setuptools \
-  python-pip \
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/* \
   && sudo apt-get clean
