@@ -1,7 +1,23 @@
 #!/bin/bash
 
-# Force this for PHP 7.4 compatibility
-docker-php-ext-enable imagick
+# Start the LiteSpeed
+/usr/local/lsws/bin/litespeed
+
+function finish()
+{
+	/usr/local/lsws/bin/lswsctrl "stop"
+	pkill "tail"
+}
+
+trap cleanup SIGTERM
+
+# Update the credentials
+if [ -n "${ADMIN_PASSWORD}" ]
+then
+	ENCRYPT_PASSWORD="$(/usr/local/lsws/admin/fcgi-bin/admin_php -q '/usr/local/lsws/admin/misc/htpasswd.php' "${ADMIN_PASSWORD}")"
+	echo "admin:${ENCRYPT_PASSWORD}" >'/usr/local/lsws/admin/conf/htpasswd'
+	echo "WebAdmin user/password is admin/${ADMIN_PASSWORD}" >'/usr/local/lsws/adminpasswd'
+fi
 
 #### Setting Up Env
 
@@ -85,19 +101,19 @@ else
   mysql --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
 fi
 
-chown -R www-data:www-data /var/www/html/
+chown -R www-data:www-data /var/www/container/html
 
 if [ ! -e wp-config.php ]; then
 
   echo "Wordpress not found, downloading latest version ..."
 
-  wp core download --locale=$WP_LOCALE --path=/var/www/html
+  wp core download --locale=$WP_LOCALE --path=/var/www/container/html
 
   echo "Creating wp-config.file ..."
 
-  cp /var/www/wp-config-sample.php /var/www/html/wp-config.php
+  cp /var/www/wp-config-sample.php /var/www/container/html/wp-config.php
 
-  chown www-data:www-data /var/www/html/wp-config.php
+  chown www-data:www-data /var/www/container/html/wp-config.php
 
   echo "Shuffling wp-config.php salts ..."
 
@@ -122,7 +138,7 @@ if [ ! -e wp-config.php ]; then
       --admin_password=dockerpress \
       --admin_email=$ADMIN_EMAIL \
       --skip-email \
-      --path=/var/www/html
+      --path=/var/www/container/html
 
     # Updating Plugins ...
     echo "Updating plugins ..."
@@ -196,20 +212,14 @@ echo "CRON: Enabling Action Scheduler ..."
 echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule ' >>/etc/cron.d/dockerpress
 echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler ' >>/etc/cron.d/dockerpress
 
-if [ ! -e /var/www/html/.htaccess ]; then
-  echo ".htaccess not found, copying now ..."
-  cp -f /var/www/.htaccess-template /var/www/html/.htaccess
-  chown www-data:www-data /var/www/html/.htaccess
-fi
-
 # Redis Cache
 if [ -n "$WP_REDIS_HOST" ]; then
   echo "Enabling Redis Cache ..."
-  rm -f /var/www/html/wp-content/object-cache.php
+  rm -f /var/www/container/html/wp-content/object-cache.php
   wp plugin install redis-cache --force --activate
   wp redis update-dropin
   wp redis enable
-  chmod +777 /var/www/html/wp-content/object-cache.php
+  chmod +777 /var/www/container/html/wp-content/object-cache.php
 fi
 
 # Enabling WPVULN Daily Report
@@ -248,10 +258,17 @@ service apache2 reload
 
 service cron reload
 
-chown -R www-data:www-data /var/www/html/
+chown -R www-data:www-data /var/www/container/html
 
 wp core verify-checksums
 
 sysvbanner dockerpress
+
+# Read the credentials
+cat '/usr/local/lsws/adminpasswd'
+
+# Tail the logs to stdout
+tail -f \
+	'/var/log/litespeed/server.log'
 
 exec "$@"
