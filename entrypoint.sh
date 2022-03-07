@@ -123,24 +123,23 @@ if [ ! -e wp-config.php ]; then
       --admin_email=$ADMIN_EMAIL \
       --skip-email \
       --path=/var/www/html
+
+    # Updating Plugins ...
+    echo "Updating plugins ..."
+    wp plugin update --all
+
+    # Remove unused Dolly
+    echo "Remove Dolly..."
+    wp plugin delete hello
+
+    # Updating Themes ...
+    echo "Updating themes ..."
+    wp theme update --all
+
     echo "Done Installing."
   else
     echo 'Wordpress is already installed.'
   fi
-
-  wp rewrite structure '/%postname%/'
-
-  # Updating Plugins ...
-  echo "Updating plugins ..."
-  wp plugin update --all
-
-  # Remove unused Dolly
-  echo "Remove Dolly..."
-  wp plugin delete hello
-
-  # Updating Themes ...
-  echo "Updating themes ..."
-  wp theme update --all
 
 else
 
@@ -227,7 +226,7 @@ fi
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
   echo "CRON: Enabling Media Regenerate ..."
   echo '1 0 * * * root /usr/local/bin/wpcli-run-media-regenerate' >>/etc/cron.d/dockerpress
-  wp plugin install regenerate-thumbnails  --force --activate
+  wp plugin install regenerate-thumbnails --force --activate
 fi
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then

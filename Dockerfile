@@ -173,8 +173,8 @@ RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com
 RUN dpkg -i /home/mod-pagespeed-*.deb
 RUN apt-get -f install
 
-COPY .htaccess /var/www/.htaccess-template
-COPY wp-config-sample.php /var/www/wp-config-sample.php
+COPY wordpress/.htaccess /var/www/.htaccess-template
+COPY wordpress/wp-config-sample.php /var/www/wp-config-sample.php
 
 # Copy commands
 COPY bin/* /usr/local/bin/
