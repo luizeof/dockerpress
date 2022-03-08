@@ -1,3 +1,0 @@
-#!/bin/bash
-
-wp eval "wp_mail( 'ADMIN_EMAIL', 'DockerPress: WPVuln Report ' . date('Y-m-d'), 'Your WPVuln Report for VIRTUAL_HOST', '', array('/var/www/vuln.txt') );" --path=/var/www/container/web

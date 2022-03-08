@@ -1,6 +1,11 @@
 #!/bin/bash
 
+sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
+
 cd /var/www/html
+
+# remove some index.html that already exists on this folder
+rm -f /var/www/html/index.html
 
 # Start the LiteSpeed
 /usr/local/lsws/bin/litespeed
@@ -173,13 +178,6 @@ wp config set DB_HOST "$WORDPRESS_DB_HOST:$WORDPRESS_DB_PORT" --add --type=const
 wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
 wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
 
-# Enable Cloudflare Plugin
-if [ -n "$WP_CLOUDFLARE_HTTP2" ]; then
-  echo "Enable the Cloudflare HTTTP2..."
-  wp config set CLOUDFLARE_HTTP2_SERVER_PUSH_ACTIVE true --raw --add --type=constant
-  wp plugin install cloudflare --force --path=/var/www/html
-fi
-
 echo "wp-config.php updated."
 
 echo "Installing action-scheduler ..."
@@ -194,12 +192,6 @@ wp package install git@github.com:wp-cli/profile-command.git
 echo "CRON: Enabling Action Scheduler ..."
 echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule ' >>/etc/cron.d/dockerpress
 echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler ' >>/etc/cron.d/dockerpress
-
-if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
-  echo "CRON: Enabling Media Regenerate ..."
-  echo '1 0 * * * root /usr/local/bin/wpcli-run-media-regenerate' >>/etc/cron.d/dockerpress
-  wp plugin install regenerate-thumbnails --force --activate --path=/var/www/html
-fi
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
   echo "CRON: Enabling Clear Transients ..."
@@ -246,6 +238,7 @@ if [ -n "$WP_REDIS_HOST" ]; then
     wp litespeed-option set object-pswd $WP_REDIS_PASSWORD
   fi
 fi
+
 
 /usr/local/lsws/bin/lswsctrl reload
 
