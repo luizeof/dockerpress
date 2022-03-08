@@ -4,6 +4,8 @@ LABEL name="DockerPress"
 LABEL version="3.0.0"
 LABEL release="2022-03-07"
 
+WORKDIR /var/www/container/web
+
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
@@ -23,7 +25,6 @@ EXPOSE "80/tcp"
 
 # Webadmin port (HTTPS)
 EXPOSE "7080/tcp"
-
 
 # Install System Libraries
 RUN apt-get update \
@@ -119,36 +120,36 @@ RUN install_packages \
 
 # Install the PHP
 RUN install_packages \
-	"lsphp80"
+	"lsphp74"
 
 # Install PHP modules
 RUN install_packages \
-	"lsphp80-apcu" \
-	"lsphp80-common" \
-	"lsphp80-curl" \
-	"lsphp80-igbinary" \
-	"lsphp80-imagick" \
-	"lsphp80-imap" \
-	"lsphp80-intl" \
-	"lsphp80-ldap" \
-	"lsphp80-memcached" \
-	"lsphp80-msgpack" \
-	"lsphp80-mysql" \
-	"lsphp80-opcache" \
-	"lsphp80-pear" \
-	"lsphp80-pgsql" \
-	"lsphp80-pspell" \
-	"lsphp80-redis" \
-	"lsphp80-sqlite3" \
-	"lsphp80-tidy"
+	"lsphp74-apcu" \
+	"lsphp74-common" \
+	"lsphp74-curl" \
+	"lsphp74-igbinary" \
+	"lsphp74-imagick" \
+	"lsphp74-imap" \
+	"lsphp74-intl" \
+	"lsphp74-ldap" \
+	"lsphp74-memcached" \
+	"lsphp74-msgpack" \
+	"lsphp74-mysql" \
+	"lsphp74-opcache" \
+	"lsphp74-pear" \
+	"lsphp74-pgsql" \
+	"lsphp74-pspell" \
+	"lsphp74-redis" \
+	"lsphp74-sqlite3" \
+	"lsphp74-tidy"
 
 # Set the default PHP CLI
 RUN ln --symbolic --force \
-	"/usr/local/lsws/lsphp80/bin/lsphp" \
+	"/usr/local/lsws/lsphp74/bin/lsphp" \
 	"/usr/local/lsws/fcgi-bin/lsphp5"
 
 RUN ln --symbolic --force \
-	"/usr/local/lsws/lsphp80/bin/php8.0" \
+	"/usr/local/lsws/lsphp74/bin/php7.4" \
 	"/usr/bin/php"
 
 # Install the certificates
@@ -217,11 +218,9 @@ RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
   rm -rf /var/lib/apt/lists/*
 
 # Default Volume for Apache
-VOLUME /var/www/container/html
+VOLUME /var/www/container
 
-VOLUME /tmp/lshttpd
-
-VOLUME /var/log/litespeed
+COPY wordpress/.htaccess /var/www
 
 COPY wordpress/wp-config-sample.php /var/www/wp-config-sample.php
 
@@ -253,10 +252,6 @@ EXPOSE 80
 # Set the workdir and command
 ENV PATH="/usr/local/lsws/bin:${PATH}"
 
-WORKDIR "/var/www/container"
-
 STOPSIGNAL "SIGTERM"
 
 ENTRYPOINT ["entrypoint.sh"]
-
-CMD ["apache2-foreground"]

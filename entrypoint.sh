@@ -1,22 +1,22 @@
 #!/bin/bash
 
+cd /var/www/container/web
+
 # Start the LiteSpeed
 /usr/local/lsws/bin/litespeed
 
-function finish()
-{
-	/usr/local/lsws/bin/lswsctrl "stop"
-	pkill "tail"
+function finish() {
+  /usr/local/lsws/bin/lswsctrl "stop"
+  pkill "tail"
 }
 
 trap cleanup SIGTERM
 
 # Update the credentials
-if [ -n "${ADMIN_PASSWORD}" ]
-then
-	ENCRYPT_PASSWORD="$(/usr/local/lsws/admin/fcgi-bin/admin_php -q '/usr/local/lsws/admin/misc/htpasswd.php' "${ADMIN_PASSWORD}")"
-	echo "admin:${ENCRYPT_PASSWORD}" >'/usr/local/lsws/admin/conf/htpasswd'
-	echo "WebAdmin user/password is admin/${ADMIN_PASSWORD}" >'/usr/local/lsws/adminpasswd'
+if [ -n "${ADMIN_PASSWORD}" ]; then
+  ENCRYPT_PASSWORD="$(/usr/local/lsws/admin/fcgi-bin/admin_php -q '/usr/local/lsws/admin/misc/htpasswd.php' "${ADMIN_PASSWORD}")"
+  echo "admin:${ENCRYPT_PASSWORD}" >'/usr/local/lsws/admin/conf/htpasswd'
+  echo "WebAdmin user/password is admin/${ADMIN_PASSWORD}" >'/usr/local/lsws/adminpasswd'
 fi
 
 #### Setting Up Env
@@ -101,19 +101,19 @@ else
   mysql --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
 fi
 
-chown -R www-data:www-data /var/www/container/html
+chown -R www-data:www-data /var/www/container
 
-if [ ! -e wp-config.php ]; then
+if [ ! -e /var/www/container/web/wp-config.php ]; then
 
   echo "Wordpress not found, downloading latest version ..."
 
-  wp core download --locale=$WP_LOCALE --path=/var/www/container/html
+  wp core download --locale=$WP_LOCALE --path=/var/www/container/web
 
   echo "Creating wp-config.file ..."
 
-  cp /var/www/wp-config-sample.php /var/www/container/html/wp-config.php
+  cp /var/www/wp-config-sample.php /var/www/container/web/wp-config.php
 
-  chown www-data:www-data /var/www/container/html/wp-config.php
+  chown www-data:www-data /var/www/container/web/wp-config.php
 
   echo "Shuffling wp-config.php salts ..."
 
@@ -138,19 +138,19 @@ if [ ! -e wp-config.php ]; then
       --admin_password=dockerpress \
       --admin_email=$ADMIN_EMAIL \
       --skip-email \
-      --path=/var/www/container/html
+      --path=/var/www/container/web
 
     # Updating Plugins ...
     echo "Updating plugins ..."
-    wp plugin update --all
+    wp plugin update --all --path=/var/www/container/web
 
     # Remove unused Dolly
     echo "Remove Dolly..."
-    wp plugin delete hello
+    wp plugin delete hello --path=/var/www/container/web
 
     # Updating Themes ...
     echo "Updating themes ..."
-    wp theme update --all
+    wp theme update --all --path=/var/www/container/web
 
     echo "Done Installing."
   else
@@ -197,13 +197,16 @@ fi
 if [ -n "$WP_CLOUDFLARE_HTTP2" ]; then
   echo "Enable the Cloudflare HTTTP2..."
   wp config set CLOUDFLARE_HTTP2_SERVER_PUSH_ACTIVE true --raw --add --type=constant
-  wp plugin install cloudflare --force
+  wp plugin install cloudflare --force --path=/var/www/container/web
 fi
 
 echo "wp-config.php updated."
 
 echo "Installing action-scheduler ..."
-wp plugin install action-scheduler --force --activate
+wp plugin install action-scheduler --force --activate --path=/var/www/container/web
+
+echo "Installing litespeed-cache ..."
+wp plugin install litespeed-cache --force --activate --path=/var/www/container/web
 
 # Setting up wp-profile -> https://github.com/wp-cli/profile-command
 wp package install git@github.com:wp-cli/profile-command.git
@@ -215,28 +218,17 @@ echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler ' >>/etc/cron.d/
 # Redis Cache
 if [ -n "$WP_REDIS_HOST" ]; then
   echo "Enabling Redis Cache ..."
-  rm -f /var/www/container/html/wp-content/object-cache.php
-  wp plugin install redis-cache --force --activate
+  rm -f /var/www/container/web/wp-content/object-cache.php
+  wp plugin install redis-cache --force --activate --path=/var/www/container/web
   wp redis update-dropin
   wp redis enable
-  chmod +777 /var/www/container/html/wp-content/object-cache.php
-fi
-
-# Enabling WPVULN Daily Report
-if [ -n "$VULN_API_TOKEN" ]; then
-  echo "Enabling VULN Daily report ..."
-  sed -i -e "s/ADMIN_EMAIL/$ADMIN_EMAIL/g" /usr/local/bin/wpcli-run-vuln-send-report
-  sed -i -e "s/VIRTUAL_HOST/$VIRTUAL_HOST/g" /usr/local/bin/wpcli-run-vuln-send-report
-  wp package install git@github.com:10up/wp-vulnerability-scanner.git
-  wp config set VULN_API_TOKEN $VULN_API_TOKEN --add --type=constant
-  echo '4 25 * * * root wpcli-run-vuln-generate' >>/etc/cron.d/dockerpress
-  echo '5 45 * * * root wpcli-run-vuln-send-report' >>/etc/cron.d/dockerpress
+  chmod +777 /var/www/container/web/wp-content/object-cache.php
 fi
 
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
   echo "CRON: Enabling Media Regenerate ..."
   echo '1 0 * * * root /usr/local/bin/wpcli-run-media-regenerate' >>/etc/cron.d/dockerpress
-  wp plugin install regenerate-thumbnails --force --activate
+  wp plugin install regenerate-thumbnails --force --activate --path=/var/www/container/web
 fi
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
@@ -254,13 +246,46 @@ if [ -n "$ENABLE_MOZILLA_OBSERVATORY" ]; then
   a2enconf mozilla-observatory
 fi
 
-service apache2 reload
-
 service cron reload
 
-chown -R www-data:www-data /var/www/container/html
+chown -R www-data:www-data /var/www/container/web
 
 wp core verify-checksums
+
+if [ ! -e /var/www/container/web/.htaccess ]; then
+  cp /var/www/.htaccess /var/www/container/
+  chown -R www-data:www-data /var/www/container/.htaccess
+  cp /var/www/.htaccess /var/www/container/web
+  chown -R www-data:www-data /var/www/container/web/.htaccess
+fi
+
+/usr/local/lsws/bin/lswsctrl reload
+
+# Setup Litespeed Cache
+
+# Redis Cache
+if [ -n "$WP_REDIS_HOST" ]; then
+
+  wp litespeed-option set object 1
+  wp litespeed-option set object-kind 1
+  wp litespeed-option set object-host $WP_REDIS_HOST
+  wp litespeed-option set object-life 360
+  wp litespeed-option set object-persistent 1
+  wp litespeed-option set object-admin 0
+  wp litespeed-option set object-transients 1
+  wp litespeed-option set object-db_id $WP_REDIS_DATABASE
+  wp litespeed-option set object-user ''
+
+  if [ -n "$WP_REDIS_PORT" ]; then
+    echo "Setting up litespeed-cache redis port..."
+    wp litespeed-option set object-port $WP_REDIS_PORT
+  fi
+
+  if [ -n "$WP_REDIS_PASSWORD" ]; then
+    echo "Setting up litespeed-cache redis password..."
+    wp litespeed-option set object-pswd $WP_REDIS_PASSWORD
+  fi
+fi
 
 sysvbanner dockerpress
 
@@ -269,6 +294,6 @@ cat '/usr/local/lsws/adminpasswd'
 
 # Tail the logs to stdout
 tail -f \
-	'/var/log/litespeed/server.log'
+  '/var/log/litespeed/server.log'
 
 exec "$@"
