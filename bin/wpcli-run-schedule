@@ -1,3 +1,3 @@
 #!/bin/bash
 
-wp cron event run --due-now --all --path=/var/www/html
+wp cron event run --due-now --all --path=/var/www/html > /var/www/event-scheduler.log

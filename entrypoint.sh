@@ -2,7 +2,7 @@
 
 # update php.ini file
 sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
-sed -i 's/post_max_size = 2M/post_max_size = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
+sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
 
 cd /var/www/html
 
@@ -39,6 +39,12 @@ touch /var/www/.wp_db_password
 touch /var/www/.wp_db_name
 touch /var/www/.wp_db_preffix
 touch /var/www/.wp_db_port
+
+touch /var/www/wp-scheduler.log
+touch /var/www/event-scheduler.log
+
+chown www-data:www-data /var/www/wp-scheduler.log
+chown www-data:www-data /var/www/event-scheduler.log
 
 echo $VIRTUAL_HOST >/var/www/.wp_address
 echo $WORDPRESS_DB_HOST >/var/www/.wp_db_host
@@ -192,11 +198,13 @@ wp plugin install litespeed-cache --force --activate --path=/var/www/html
 wp package install git@github.com:wp-cli/profile-command.git
 
 echo "CRON: Enabling Action Scheduler ..."
+
 echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule ' >>/etc/cron.d/dockerpress
 echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler ' >>/etc/cron.d/dockerpress
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
   echo "CRON: Enabling Clear Transients ..."
+
   echo '30 2 * * * root /usr/local/bin/wpcli-run-delete-transient' >>/etc/cron.d/dockerpress
 fi
 
@@ -207,6 +215,8 @@ dos2unix /etc/cron.d/dockerpress
 chmod 644 /etc/cron.d/dockerpress
 
 service cron reload
+
+service cron start
 
 chown -R www-data:www-data /var/www/html
 
@@ -232,7 +242,6 @@ if [ -n "$WP_REDIS_HOST" ]; then
   wp litespeed-option set object-admin 0
   wp litespeed-option set object-transients 1
   wp litespeed-option set object-db_id $WP_REDIS_DATABASE
-  wp litespeed-option set object-user ''
   wp litespeed-option set object-port $WP_REDIS_PORT
 
   if [ -n "$WP_REDIS_PASSWORD" ]; then
