@@ -1,6 +1,8 @@
 #!/bin/bash
 
+# update php.ini file
 sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
+sed -i 's/post_max_size = 2M/post_max_size = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
 
 cd /var/www/html
 
