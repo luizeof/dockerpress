@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /var/www/container/web
+cd /var/www/html
 
 # Start the LiteSpeed
 /usr/local/lsws/bin/litespeed
@@ -101,19 +101,19 @@ else
   mysql --no-defaults -h $WORDPRESS_DB_HOST --port $WORDPRESS_DB_PORT -u $WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $WORDPRESS_DB_NAME;"
 fi
 
-chown -R www-data:www-data /var/www/container
+chown -R www-data:www-data /var/www/html
 
-if [ ! -e /var/www/container/web/wp-config.php ]; then
+if [ ! -e /var/www/html/wp-config.php ]; then
 
   echo "Wordpress not found, downloading latest version ..."
 
-  wp core download --locale=$WP_LOCALE --path=/var/www/container/web
+  wp core download --locale=$WP_LOCALE --path=/var/www/html
 
   echo "Creating wp-config.file ..."
 
-  cp /var/www/wp-config-sample.php /var/www/container/web/wp-config.php
+  cp /var/www/wp-config-sample.php /var/www/html/wp-config.php
 
-  chown www-data:www-data /var/www/container/web/wp-config.php
+  chown www-data:www-data /var/www/html/wp-config.php
 
   echo "Shuffling wp-config.php salts ..."
 
@@ -138,19 +138,19 @@ if [ ! -e /var/www/container/web/wp-config.php ]; then
       --admin_password=dockerpress \
       --admin_email=$ADMIN_EMAIL \
       --skip-email \
-      --path=/var/www/container/web
+      --path=/var/www/html
 
     # Updating Plugins ...
     echo "Updating plugins ..."
-    wp plugin update --all --path=/var/www/container/web
+    wp plugin update --all --path=/var/www/html
 
     # Remove unused Dolly
     echo "Remove Dolly..."
-    wp plugin delete hello --path=/var/www/container/web
+    wp plugin delete hello --path=/var/www/html
 
     # Updating Themes ...
     echo "Updating themes ..."
-    wp theme update --all --path=/var/www/container/web
+    wp theme update --all --path=/var/www/html
 
     echo "Done Installing."
   else
@@ -173,40 +173,20 @@ wp config set DB_HOST "$WORDPRESS_DB_HOST:$WORDPRESS_DB_PORT" --add --type=const
 wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
 wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
 
-# Redis Cache
-if [ -n "$WP_REDIS_HOST" ]; then
-  wp config set WP_CACHE true --raw --add --type=constant
-  wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
-  wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
-  wp config set WP_CACHE_KEY_SALT $VIRTUAL_HOST --add --type=constant
-
-  if [ -n "$WP_REDIS_PORT" ]; then
-    echo "Setting up redis port..."
-    wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
-  fi
-
-  if [ -n "$WP_REDIS_PASSWORD" ]; then
-    echo "Setting up redis password..."
-    wp config set WP_REDIS_PASSWORD $WP_REDIS_PASSWORD --add --type=constant
-  else
-    echo "Redis password not set. Try to create a more secure redis setup."
-  fi
-fi
-
 # Enable Cloudflare Plugin
 if [ -n "$WP_CLOUDFLARE_HTTP2" ]; then
   echo "Enable the Cloudflare HTTTP2..."
   wp config set CLOUDFLARE_HTTP2_SERVER_PUSH_ACTIVE true --raw --add --type=constant
-  wp plugin install cloudflare --force --path=/var/www/container/web
+  wp plugin install cloudflare --force --path=/var/www/html
 fi
 
 echo "wp-config.php updated."
 
 echo "Installing action-scheduler ..."
-wp plugin install action-scheduler --force --activate --path=/var/www/container/web
+wp plugin install action-scheduler --force --activate --path=/var/www/html
 
 echo "Installing litespeed-cache ..."
-wp plugin install litespeed-cache --force --activate --path=/var/www/container/web
+wp plugin install litespeed-cache --force --activate --path=/var/www/html
 
 # Setting up wp-profile -> https://github.com/wp-cli/profile-command
 wp package install git@github.com:wp-cli/profile-command.git
@@ -215,20 +195,10 @@ echo "CRON: Enabling Action Scheduler ..."
 echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule ' >>/etc/cron.d/dockerpress
 echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler ' >>/etc/cron.d/dockerpress
 
-# Redis Cache
-if [ -n "$WP_REDIS_HOST" ]; then
-  echo "Enabling Redis Cache ..."
-  rm -f /var/www/container/web/wp-content/object-cache.php
-  wp plugin install redis-cache --force --activate --path=/var/www/container/web
-  wp redis update-dropin
-  wp redis enable
-  chmod +777 /var/www/container/web/wp-content/object-cache.php
-fi
-
 if [ "$CRON_MEDIA_REGENERATE" -eq 1 ]; then
   echo "CRON: Enabling Media Regenerate ..."
   echo '1 0 * * * root /usr/local/bin/wpcli-run-media-regenerate' >>/etc/cron.d/dockerpress
-  wp plugin install regenerate-thumbnails --force --activate --path=/var/www/container/web
+  wp plugin install regenerate-thumbnails --force --activate --path=/var/www/html
 fi
 
 if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
@@ -242,24 +212,18 @@ dos2unix /etc/cron.d/dockerpress
 
 chmod 644 /etc/cron.d/dockerpress
 
-if [ -n "$ENABLE_MOZILLA_OBSERVATORY" ]; then
-  a2enconf mozilla-observatory
-fi
-
 service cron reload
 
-chown -R www-data:www-data /var/www/container/web
+chown -R www-data:www-data /var/www/html
 
 wp core verify-checksums
 
-if [ ! -e /var/www/container/web/.htaccess ]; then
+if [ ! -e /var/www/html/.htaccess ]; then
   cp /var/www/.htaccess /var/www/container/
   chown -R www-data:www-data /var/www/container/.htaccess
-  cp /var/www/.htaccess /var/www/container/web
-  chown -R www-data:www-data /var/www/container/web/.htaccess
+  cp /var/www/.htaccess /var/www/html
+  chown -R www-data:www-data /var/www/html/.htaccess
 fi
-
-/usr/local/lsws/bin/lswsctrl reload
 
 # Setup Litespeed Cache
 
@@ -275,17 +239,15 @@ if [ -n "$WP_REDIS_HOST" ]; then
   wp litespeed-option set object-transients 1
   wp litespeed-option set object-db_id $WP_REDIS_DATABASE
   wp litespeed-option set object-user ''
-
-  if [ -n "$WP_REDIS_PORT" ]; then
-    echo "Setting up litespeed-cache redis port..."
-    wp litespeed-option set object-port $WP_REDIS_PORT
-  fi
+  wp litespeed-option set object-port $WP_REDIS_PORT
 
   if [ -n "$WP_REDIS_PASSWORD" ]; then
     echo "Setting up litespeed-cache redis password..."
     wp litespeed-option set object-pswd $WP_REDIS_PASSWORD
   fi
 fi
+
+/usr/local/lsws/bin/lswsctrl reload
 
 sysvbanner dockerpress
 

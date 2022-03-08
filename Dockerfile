@@ -4,7 +4,7 @@ LABEL name="DockerPress"
 LABEL version="3.0.0"
 LABEL release="2022-03-07"
 
-WORKDIR /var/www/container/web
+WORKDIR /var/www/html
 
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
@@ -193,9 +193,9 @@ COPY --chown="lsadm:lsadm" \
 # Create the virtual host folders
 RUN mkdir --parents \
 	"/usr/local/lsws/conf/vhosts/container" \
-	"/var/www/container" \
-	"/var/www/container/web" \
-	"/var/www/container/tmp"
+	"/var/www" \
+	"/var/www/html" \
+	"/var/www/tmp"
 
 # Configure the virtual host
 COPY --chown="lsadm:lsadm" \
@@ -208,7 +208,7 @@ RUN chown --recursive "lsadm:lsadm" \
 
 # Set up the virtual host document root permissions
 RUN chown --recursive "www-data:www-data" \
-	"/var/www/container"
+	"/var/www/html"
 
 RUN chown "www-data:www-data" \
 	"/var/www"
@@ -217,8 +217,8 @@ RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
   ; \
   rm -rf /var/lib/apt/lists/*
 
-# Default Volume for Apache
-VOLUME /var/www/container
+# Default Volume for Web
+VOLUME /var/www/html
 
 COPY wordpress/.htaccess /var/www
 
