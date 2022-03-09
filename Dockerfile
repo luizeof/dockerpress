@@ -230,6 +230,12 @@ COPY bin/* /usr/local/bin/
 # Fix Permissions
 RUN chmod -R +777 /usr/local/bin/
 
+# Copy Crontab
+COPY cron.d/dockerpress.crontab /etc/cron.d/dockerpress
+
+RUN dos2unix /etc/cron.d/dockerpress
+RUN chmod 644 /etc/cron.d/dockerpress
+
 RUN { \
   echo '[client]'; \
   echo 'user=MYUSER'; \

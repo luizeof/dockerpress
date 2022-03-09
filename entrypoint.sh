@@ -89,11 +89,8 @@ echo "Done"
 
 ### Setting up cron file
 
-echo "Setting up wp-cron..."
-touch /etc/cron.d/dockerpress
-echo "SHELL=/bin/bash" >/etc/cron.d/dockerpress
-echo "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" >>/etc/cron.d/dockerpress
-echo "" >>/etc/cron.d/dockerpress
+service cron reload
+service cron start
 
 #### Setting up Mysql Optimize
 
@@ -119,15 +116,12 @@ chown -R www-data:www-data /var/www/html
 if [ ! -e /var/www/html/wp-config.php ]; then
 
   echo "Wordpress not found, downloading latest version ..."
-
   wp core download --locale=$WP_LOCALE --path=/var/www/html
 
   echo "Creating wp-config.file ..."
-
   cp /var/www/wp-config-sample.php /var/www/html/wp-config.php
 
   chown www-data:www-data /var/www/html/wp-config.php
-
   echo "Shuffling wp-config.php salts ..."
 
   wp config shuffle-salts
@@ -171,9 +165,7 @@ if [ ! -e /var/www/html/wp-config.php ]; then
   fi
 
 else
-
   echo 'wp-config.php file already exists.'
-
 fi
 
 echo "Updating wp-config.php ..."
@@ -186,37 +178,14 @@ wp config set DB_HOST "$WORDPRESS_DB_HOST:$WORDPRESS_DB_PORT" --add --type=const
 wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
 wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
 
-echo "wp-config.php updated."
-
 echo "Installing action-scheduler ..."
 wp plugin install action-scheduler --force --activate --path=/var/www/html
 
 echo "Installing litespeed-cache ..."
 wp plugin install litespeed-cache --force --activate --path=/var/www/html
 
-# Setting up wp-profile -> https://github.com/wp-cli/profile-command
-wp package install git@github.com:wp-cli/profile-command.git
-
-echo "CRON: Enabling Action Scheduler ..."
-
-echo '*/2 * * * * root /usr/local/bin/wpcli-run-schedule ' >>/etc/cron.d/dockerpress
-echo '*/3 * * * * root /usr/local/bin/wpcli-run-actionscheduler ' >>/etc/cron.d/dockerpress
-
-if [ "$CRON_CLEAR_TRANSIENT" -eq 1 ]; then
-  echo "CRON: Enabling Clear Transients ..."
-
-  echo '30 2 * * * root /usr/local/bin/wpcli-run-delete-transient' >>/etc/cron.d/dockerpress
-fi
-
-echo '' >>/etc/cron.d/dockerpress
-
-dos2unix /etc/cron.d/dockerpress
-
-chmod 644 /etc/cron.d/dockerpress
-
-service cron reload
-
-service cron start
+echo "Installing regenerate-thumbnails ..."
+wp plugin install regenerate-thumbnails --force --activate --path=/var/www/html
 
 chown -R www-data:www-data /var/www/html
 
@@ -233,7 +202,6 @@ fi
 
 # Redis Cache
 if [ -n "$WP_REDIS_HOST" ]; then
-
   wp litespeed-option set object 1
   wp litespeed-option set object-kind 1
   wp litespeed-option set object-host $WP_REDIS_HOST
@@ -249,7 +217,6 @@ if [ -n "$WP_REDIS_HOST" ]; then
     wp litespeed-option set object-pswd $WP_REDIS_PASSWORD
   fi
 fi
-
 
 /usr/local/lsws/bin/lswsctrl reload
 
