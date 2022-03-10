@@ -189,6 +189,6 @@ cat '/usr/local/lsws/adminpasswd'
 
 # Tail the logs to stdout
 tail -f \
-  '/var/log/litespeed/server.log'
+  '/var/log/litespeed/access.log'
 
 exec "$@"
