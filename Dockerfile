@@ -192,7 +192,7 @@ COPY --chown="lsadm:lsadm" \
 
 # Create the virtual host folders
 RUN mkdir --parents \
-	"/usr/local/lsws/conf/vhosts/container" \
+	"/usr/local/lsws/conf/vhosts/wordpress" \
 	"/var/www" \
 	"/var/www/html" \
 	"/var/www/tmp"
@@ -200,11 +200,11 @@ RUN mkdir --parents \
 # Configure the virtual host
 COPY --chown="lsadm:lsadm" \
 	"litespeed/config/vhconf.conf" \
-	"/usr/local/lsws/conf/vhosts/container/vhconf.conf"
+	"/usr/local/lsws/conf/vhosts/wordpress/vhconf.conf"
 
 # Set up the virtual host configuration permissions
 RUN chown --recursive "lsadm:lsadm" \
-	"/usr/local/lsws/conf/vhosts/container"
+	"/usr/local/lsws/conf/vhosts/wordpress"
 
 # Set up the virtual host document root permissions
 RUN chown --recursive "www-data:www-data" \
@@ -248,7 +248,7 @@ RUN { \
   echo ''; \
   } > /root/.my.cnf.sample
 
-# Running container startup scripts
+# Running wordpress startup scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
