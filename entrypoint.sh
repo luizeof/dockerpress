@@ -198,26 +198,6 @@ if [ ! -e /var/www/html/.htaccess ]; then
   chown -R www-data:www-data /var/www/html/.htaccess
 fi
 
-# Setup Litespeed Cache
-
-# Redis Cache
-if [ -n "$WP_REDIS_HOST" ]; then
-  wp litespeed-option set object 1
-  wp litespeed-option set object-kind 1
-  wp litespeed-option set object-host $WP_REDIS_HOST
-  wp litespeed-option set object-life 360
-  wp litespeed-option set object-persistent 1
-  wp litespeed-option set object-admin 0
-  wp litespeed-option set object-transients 1
-  wp litespeed-option set object-db_id $WP_REDIS_DATABASE
-  wp litespeed-option set object-port $WP_REDIS_PORT
-
-  if [ -n "$WP_REDIS_PASSWORD" ]; then
-    echo "Setting up litespeed-cache redis password..."
-    wp litespeed-option set object-pswd $WP_REDIS_PASSWORD
-  fi
-fi
-
 /usr/local/lsws/bin/lswsctrl reload
 
 sysvbanner dockerpress
