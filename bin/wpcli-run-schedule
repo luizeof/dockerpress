@@ -4,4 +4,4 @@ touch /var/www/event-scheduler.log
 
 chown www-data:www-data /var/www/event-scheduler.log
 
-wp cron event run --due-now --all --path=/var/www/html >/var/www/event-scheduler.log
+wp cron event run --due-now --path=/var/www/html >/var/www/event-scheduler.log

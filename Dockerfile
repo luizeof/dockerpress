@@ -29,6 +29,7 @@ RUN apt-get update \
 	sudo \
 	curl \
 	cron \
+	less \
 	sysvbanner \
 	wget \
 	nano \
