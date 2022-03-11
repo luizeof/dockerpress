@@ -10,7 +10,7 @@ WORKDIR /var/www/html
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 ENV ADMIN_EMAIL "webmaster@host.com"
-ENV WP_LOCALE "pt_BR"
+ENV WP_LOCALE "en_US"
 ENV WP_DEBUG false
 ENV WORDPRESS_DB_PORT 3306
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1"

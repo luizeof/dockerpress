@@ -1,26 +1,31 @@
 # DockerPress
 
-O DockerPress é uma suíte de serviços que permitem Configurar um Ambiente Docker exclusivo para WordPress com as ferramentas mais poderosas da atualidade.
+**DockerPress** is a set of services that allows you to configure an exclusive Docker environment for WordPress with the most powerful tools like **OpenliteSpeed**, **Redis**, **Traefik** and **MySQL 8**.
 
-**Sem acesso ao SSH**, não é necessário conhecimento de infra e funciona nos principais provedores: **Digital Ocean**, **Linode**, **Vultr** e **AWS Lightsail**.
+The official DockerPress image can be accessed at [https://hub.docker.com/r/luizeof/dockerpress](https://hub.docker.com/r/luizeof/dockerpress).
 
-- Acompanhe o DockerPress em [https://hub.docker.com/r/luizeof/dockerpress](https://hub.docker.com/r/luizeof/dockerpress).
+## Environment Variables
 
-## Variáveis de Ambiente
+Use the values below to configure your WordPress installation.
 
-Utilize os valores abaixo para configurar sua instalação do Wordpress.
+### Database Settings
 
-#### Configurações do Mysql
-| ENV | Padrão | Obrigatório | Descrição |
-| --- | --- | --- | --- |
-| WORDPRESS_DB_HOST |  | Sim | IP ou Host do MySQL |
-| WORDPRESS_DB_NAME	|  | Sim | Nome do Banco de Dados |
-| WORDPRESS_DB_PASSWORD |	 | Sim | Senha do MySQL |
-| WORDPRESS_DB_USER	|  | Sim | Usuário do MySQL |
+| ENV                   | Default Value | Required | Description    |
+| --------------------- | ------------- | -------- | -------------- |
+| WORDPRESS_DB_HOST     |               | Sim      | MySQL Host     |
+| WORDPRESS_DB_PORT     | 3306          | Sim      | MySQL Port     |
+| WORDPRESS_DB_NAME     |               | Sim      | Database Name  |
+| WORDPRESS_DB_PASSWORD |               | Sim      | MySQL Password |
+| WORDPRESS_DB_USER     |               | Sim      | MySQL Username |
 
-#### Configurações do  Redis
-| ENV | Padrão | Obrigatório | Descrição |
-| --- | --- | --- | --- |
-| WP_REDIS_DATABASE |	1 | Não | ID do Banco de Dados Redis |
-| WP_REDIS_PORT	| 6379 | Não | Porta do Servidor Redis |
-| WP_REDIS_HOST	|  | Não | IP do Servidor Redis |
+### General Settings
+
+| ENV          | Default Value | Required | Description                                                                    |
+| ------------ | ------------- | -------- | ------------------------------------------------------------------------------ |
+| VIRTUAL_HOST |               | Sim      | Website Domain                                                                 |
+| ADMIN_EMAIL  |               | No       | Wordpress Admin E-mail                                                         |
+| WP_LOCALE    | en_US         | Sim      | Wordpress Locale ([Available Locales](https://translate.wordpress.org/stats/)) |
+
+## Container Volume
+
+By default, DockerPress uses a single volume that must be mapped to `/var/www/html`. The entire WordPress installation is stored in this path.
