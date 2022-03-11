@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# remove default index.html if exists
+rm -f /var/www/html/index.html
+
 function finish() {
   /usr/local/lsws/bin/lswsctrl "stop"
   pkill "tail"
