@@ -10,11 +10,7 @@ WORKDIR /var/www/html
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 ENV ADMIN_EMAIL "webmaster@host.com"
-ENV WP_POST_REVISIONS true
 ENV WP_LOCALE "pt_BR"
-ENV CRON_ACTIONSCHEDULER 1
-ENV CRON_MEDIA_REGENERATE 1
-ENV CRON_CLEAR_TRANSIENT 1
 ENV WP_DEBUG false
 ENV WORDPRESS_DB_PORT 3306
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1"
@@ -33,9 +29,6 @@ RUN apt-get update \
   sudo \
   software-properties-common \
   build-essential \
-  apache2 \
-  libapache2-mod-security2 \
-  modsecurity-crs \
   curl \
   tcl \
   dos2unix \
@@ -141,6 +134,7 @@ RUN install_packages \
 	"lsphp74-pspell" \
 	"lsphp74-redis" \
 	"lsphp74-sqlite3" \
+	"lsphp74-json" \
 	"lsphp74-tidy"
 
 # Set the default PHP CLI
