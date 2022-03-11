@@ -4,4 +4,4 @@ touch /var/www/media-regenerate.log
 
 chown www-data:www-data /var/www/media-regenerate.log
 
-wp media regenerate --only-missing --yes --path=/var/www/html
+wp media regenerate --only-missing --yes --path=/var/www/html > /var/www/media-regenerate.log

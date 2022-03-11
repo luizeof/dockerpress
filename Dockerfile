@@ -120,7 +120,6 @@ RUN install_packages \
 	"procps" \
 	"tzdata"
 
-
 # PHP Settings
 RUN  sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
 RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
@@ -198,8 +197,15 @@ COPY wordpress/wp-config-sample.php /var/www/wp-config-sample.php
 # Copy commands
 COPY bin/* /usr/local/bin/
 
-# Fix Permissions
-RUN chmod -R +777 /usr/local/bin/
+# Add Permissions
+RUN chmod +x /usr/local/bin/wp
+RUN chmod +x /usr/local/bin/mysql-optimize
+RUN chmod +x /usr/local/bin/wpcli-run-actionscheduler
+RUN chmod +x /usr/local/bin/wpcli-run-clear-scheduler-log
+RUN chmod +x /usr/local/bin/wpcli-run-clear-spams
+RUN chmod +x /usr/local/bin/wpcli-run-delete-transient
+RUN chmod +x /usr/local/bin/wpcli-run-media-regenerate
+RUN chmod +x /usr/local/bin/wpcli-run-schedule
 
 # Copy Crontab
 COPY cron.d/dockerpress.crontab /etc/cron.d/dockerpress
