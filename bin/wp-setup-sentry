@@ -16,7 +16,7 @@ if [ -n "$WP_SENTRY_ENV" ]; then
 fi
 
 # Configure  Sentry Application Version DSN
-if [ -n "$WP_SENTRY_VERSION" ]; then 
+if [ -n "$WP_SENTRY_VERSION" ]; then
     wp config set WP_SENTRY_VERSION $WP_SENTRY_VERSION --add --type=constant
 fi
 
