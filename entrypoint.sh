@@ -20,20 +20,6 @@ function update_wp_config() {
   wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
 }
 
-function update_php_ini() {
-  echo "Updating php.ini ..."
-  sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
-  sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
-
-  {
-    echo 'opcache.memory_consumption=768'
-    echo 'opcache.interned_strings_buffer=16'
-    echo 'opcache.max_accelerated_files=99999'
-    echo 'opcache.revalidate_freq=2'
-    echo 'opcache.fast_shutdown=1'
-  } >>/usr/local/lsws/lsphp74/etc/php/7.4/mods-available/opcache.ini
-}
-
 function generate_litespeed_password() {
   if [ -n "${ADMIN_PASSWORD}" ]; then
     ENCRYPT_PASSWORD="$(/usr/local/lsws/admin/fcgi-bin/admin_php -q '/usr/local/lsws/admin/misc/htpasswd.php' "${ADMIN_PASSWORD}")"
@@ -148,9 +134,6 @@ function install_dockerpress_plugins() {
 }
 
 cd /var/www/html
-
-# Update php.ini
-update_php_ini
 
 # Generate litespeed Admin Password
 generate_litespeed_password

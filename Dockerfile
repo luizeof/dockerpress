@@ -24,65 +24,29 @@ EXPOSE "7080/tcp"
 
 # Install System Libraries
 RUN apt-get update \
-  && \
-  apt-get install -y --no-install-recommends \
-  sudo \
-  software-properties-common \
-  build-essential \
-  curl \
-  tcl \
-  dos2unix \
-  cron \
-  bzip2 \
-  tidy \
-  sysvbanner \
-  wget \
-  less \
-  nano \
-  htop \
-  zip \
-  unzip \
-  git \
-  libwebp-dev \
-  webp \
-  libwebp6 \
-  graphicsmagick \
-  csstidy \
-  g++ \
-  zlib1g-dev \
-  libjpeg-dev \
-  libmagickwand-dev \
-  libpng-dev \
-  libgif-dev \
-  libtiff-dev \
-  libz-dev \
-  inetutils-ping \
-  libpq-dev \
-  libcurl4-openssl-dev \
-  libaprutil1-dev \
-  libssl-dev \
-  libicu-dev \
-  libldap2-dev \
-  libmemcached-dev \
-  libxml2-dev \
-  libzip-dev \
-  mariadb-client \
-  libwebp-dev \
-  libjpeg62-turbo-dev \
-  libxpm-dev \
-  libfreetype6-dev \
-  imagemagick \
-  ghostscript \
-  jpegoptim \
-  optipng \
-  pngquant \
-  libc-client-dev \
-  libjpeg-dev \
-  gifsicle \
-  groff \
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/* \
-  && sudo apt-get clean
+	&& \
+	apt-get install -y --no-install-recommends \
+	sudo \
+	curl \
+	cron \
+	sysvbanner \
+	wget \
+	nano \
+	htop \
+	zip \
+	unzip \
+	git \
+	webp \
+	libwebp6 \
+	graphicsmagick \
+	imagemagick \
+	zlib1g \
+	inetutils-ping \
+	libxml2 \
+	default-mysql-client\
+	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& sudo apt-get clean
 
 # Make sure we have required tools
 RUN install_packages \
@@ -155,6 +119,18 @@ RUN install_packages \
 	"procps" \
 	"tzdata"
 
+
+# PHP Settings
+RUN  sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
+RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
+RUN  { \
+	echo 'opcache.memory_consumption=768'; \
+	echo 'opcache.interned_strings_buffer=16'; \
+	echo 'opcache.max_accelerated_files=99999'; \
+	echo 'opcache.revalidate_freq=2'; \
+	echo 'opcache.fast_shutdown=1'; \
+	} >>/usr/local/lsws/lsphp74/etc/php/7.4/mods-available/opcache.ini
+
 # Create the directories
 RUN mkdir --parents \
 	"/tmp/lshttpd/gzcache" \
@@ -208,8 +184,8 @@ RUN chown "www-data:www-data" \
 	"/var/www"
 
 RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  ; \
-  rm -rf /var/lib/apt/lists/*
+	; \
+	rm -rf /var/lib/apt/lists/*
 
 # Default Volume for Web
 VOLUME /var/www/html
@@ -226,21 +202,19 @@ RUN chmod -R +777 /usr/local/bin/
 
 # Copy Crontab
 COPY cron.d/dockerpress.crontab /etc/cron.d/dockerpress
-
-RUN dos2unix /etc/cron.d/dockerpress
 RUN chmod 644 /etc/cron.d/dockerpress
 
 RUN { \
-  echo '[client]'; \
-  echo 'user=MYUSER'; \
-  echo "password='MYPASSWORD'"; \
-  echo 'host=MYHOST'; \
-  echo 'port=MYPORT'; \
-  echo ''; \
-  echo '[mysql]'; \
-  echo 'database=MYDATABASE'; \
-  echo ''; \
-  } > /root/.my.cnf.sample
+	echo '[client]'; \
+	echo 'user=MYUSER'; \
+	echo "password='MYPASSWORD'"; \
+	echo 'host=MYHOST'; \
+	echo 'port=MYPORT'; \
+	echo ''; \
+	echo '[mysql]'; \
+	echo 'database=MYDATABASE'; \
+	echo ''; \
+	} > /root/.my.cnf.sample
 
 # Running wordpress startup scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
@@ -251,7 +225,5 @@ EXPOSE 80
 
 # Set the workdir and command
 ENV PATH="/usr/local/lsws/bin:${PATH}"
-
-STOPSIGNAL "SIGTERM"
 
 ENTRYPOINT ["entrypoint.sh"]
