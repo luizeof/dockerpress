@@ -2,6 +2,16 @@
 
 **DockerPress** is a set of services that allows you to configure an exclusive Docker environment for WordPress with the most powerful tools like **OpenliteSpeed**, **Redis**, **Traefik** and **MySQL 8**.
 
+DockerPress has some Out of the Box features:
+
+- [wp-cli (Wordpress Command Line Client)](https://wp-cli.org/)
+- [OpenLiteSpeed](https://openlitespeed.org/)
+- [OPcache](https://www.php.net/manual/pt_BR/book.opcache.php)
+- [Automatically generation thumb images on background](https://br.wordpress.org/plugins/regenerate-thumbnails/)
+- Automatically removes spam comments
+- Automatically remove transient posts
+- [Action Scheduler](https://actionscheduler.org/)
+
 The official DockerPress image can be accessed at [https://hub.docker.com/r/luizeof/dockerpress](https://hub.docker.com/r/luizeof/dockerpress).
 
 ## Environment Variables
