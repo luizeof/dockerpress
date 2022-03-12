@@ -1,10 +1,8 @@
-FROM bitnami/minideb:buster
+FROM php:7.4-apache
 
 LABEL name="DockerPress"
 LABEL version="3.0.0"
-LABEL release="2022-03-07"
-
-WORKDIR /var/www/html
+LABEL release="2022-03-12"
 
 # ENV Defaults
 ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
@@ -13,224 +11,163 @@ ENV ADMIN_EMAIL "webmaster@host.com"
 ENV WP_LOCALE "en_US"
 ENV WP_DEBUG false
 ENV WORDPRESS_DB_PORT 3306
-ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1"
-ENV DEBIAN_FRONTEND="noninteractive"
-
-# HTTP port
-EXPOSE "80/tcp"
-
-# Webadmin port (HTTPS)
-EXPOSE "7080/tcp"
 
 # Install System Libraries
 RUN apt-get update \
-	&& \
-	apt-get install -y --no-install-recommends \
-	sudo \
-	curl \
-	cron \
-	less \
-	sysvbanner \
-	wget \
-	nano \
-	htop \
-	zip \
-	unzip \
-	git \
-	webp \
-	libwebp6 \
-	graphicsmagick \
-	imagemagick \
-	zlib1g \
-	inetutils-ping \
-	libxml2 \
-	default-mysql-client\
-	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-	&& rm -rf /var/lib/apt/lists/* \
-	&& sudo apt-get clean
+  && \
+  apt-get install -y --no-install-recommends \
+  sudo \
+  apache2 \
+  libapache2-mod-security2 \
+  modsecurity-crs \
+  curl \
+  tcl \
+  cron \
+  bzip2 \
+  tidy \
+  sysvbanner \
+  wget \
+  less \
+  nano \
+  htop \
+  zip \
+  unzip \
+  git \
+  webp \
+  libwebp6 \
+  graphicsmagick \
+  csstidy \
+  g++ \
+  inetutils-ping \
+  libcurl4-openssl-dev \
+  libaprutil1-dev \
+  libxml2 \
+  mariadb-client \
+  imagemagick \
+  libc-client-dev \
+  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+  && rm -rf /var/lib/apt/lists/* \
+  && sudo apt-get clean
 
-# Make sure we have required tools
-RUN install_packages \
-	"curl" \
-	"gnupg"
+# Configure PHP and System Libraries
+RUN	docker-php-ext-configure gd --with-freetype --with-jpeg
 
-# Install the Litespeed keys
-RUN curl --silent --show-error \
-	"http://rpms.litespeedtech.com/debian/lst_debian_repo.gpg" |\
-	apt-key add -
+RUN docker-php-ext-install -j "$(nproc)" \
+  bcmath \
+  exif \
+  gd \
+  pdo \
+  intl \
+  xml \
+  pdo_mysql \
+  soap \
+  opcache \
+  mysqli \
+  opcache \
+  zip
 
-RUN curl --silent --show-error \
-	"http://rpms.litespeedtech.com/debian/lst_repo.gpg" |\
-	apt-key add -
+RUN printf "\n" | printf "\n" | pecl install redis \
+  ; \
+  pecl install imagick \
+  apcu \
+  memcached
 
-# Install the Litespeed repository
-RUN \
-	echo "deb http://rpms.litespeedtech.com/debian/ buster main" > "/etc/apt/sources.list.d/openlitespeed.list"
-
-# Install the Litespeed
-RUN install_packages \
-	"openlitespeed" && \
-	echo "cloud-docker" > "/usr/local/lsws/PLAT"
-
-# Install PageSpeed module
-RUN install_packages \
-	"ols-pagespeed"
-
-# Install the PHP
-RUN install_packages \
-	"lsphp74"
-
-# Install PHP modules
-RUN install_packages \
-	"lsphp74-apcu" \
-	"lsphp74-common" \
-	"lsphp74-curl" \
-	"lsphp74-igbinary" \
-	"lsphp74-imagick" \
-	"lsphp74-imap" \
-	"lsphp74-intl" \
-	"lsphp74-ldap" \
-	"lsphp74-memcached" \
-	"lsphp74-msgpack" \
-	"lsphp74-mysql" \
-	"lsphp74-opcache" \
-	"lsphp74-pear" \
-	"lsphp74-pgsql" \
-	"lsphp74-pspell" \
-	"lsphp74-redis" \
-	"lsphp74-sqlite3" \
-	"lsphp74-json" \
-	"lsphp74-tidy"
-
-# Set the default PHP CLI
-RUN ln --symbolic --force \
-	"/usr/local/lsws/lsphp74/bin/lsphp" \
-	"/usr/local/lsws/fcgi-bin/lsphp5"
-
-RUN ln --symbolic --force \
-	"/usr/local/lsws/lsphp74/bin/php7.4" \
-	"/usr/bin/php"
-
-# Install the certificates
-RUN install_packages \
-	"ca-certificates"
-
-# Install requirements
-RUN install_packages \
-	"procps" \
-	"tzdata"
-
-# PHP Settings
-RUN  sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
-RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
-RUN  { \
-	echo 'opcache.memory_consumption=768'; \
-	echo 'opcache.interned_strings_buffer=16'; \
-	echo 'opcache.max_accelerated_files=99999'; \
-	echo 'opcache.revalidate_freq=2'; \
-	echo 'opcache.fast_shutdown=1'; \
-	} >>/usr/local/lsws/lsphp74/etc/php/7.4/mods-available/opcache.ini
-
-# Create the directories
-RUN mkdir --parents \
-	"/tmp/lshttpd/gzcache" \
-	"/tmp/lshttpd/pagespeed" \
-	"/tmp/lshttpd/stats" \
-	"/tmp/lshttpd/swap" \
-	"/tmp/lshttpd/upload" \
-	"/var/log/litespeed"
-
-# Make sure logfiles exist
-RUN touch \
-	"/var/log/litespeed/server.log" \
-	"/var/log/litespeed/access.log"
-
-# Make sure we have access to files
-RUN chown --recursive "lsadm:lsadm" \
-	"/tmp/lshttpd" \
-	"/var/log/litespeed"
-
-# Configure the admin interface
-COPY --chown="lsadm:lsadm" \
-	"litespeed/config/admin_config.conf" \
-	"/usr/local/lsws/admin/conf/admin_config.conf"
-
-# Configure the server
-COPY --chown="lsadm:lsadm" \
-	"litespeed/config/httpd_config.conf" \
-	"/usr/local/lsws/conf/httpd_config.conf"
-
-# Create the virtual host folders
-RUN mkdir --parents \
-	"/usr/local/lsws/conf/vhosts/wordpress" \
-	"/var/www" \
-	"/var/www/html" \
-	"/var/www/tmp"
-
-# Configure the virtual host
-COPY --chown="lsadm:lsadm" \
-	"litespeed/config/vhconf.conf" \
-	"/usr/local/lsws/conf/vhosts/wordpress/vhconf.conf"
-
-# Set up the virtual host configuration permissions
-RUN chown --recursive "lsadm:lsadm" \
-	"/usr/local/lsws/conf/vhosts/wordpress"
-
-# Set up the virtual host document root permissions
-RUN chown --recursive "www-data:www-data" \
-	"/var/www/html"
-
-RUN chown "www-data:www-data" \
-	"/var/www"
+RUN docker-php-ext-enable imagick \
+  bcmath \
+  redis \
+  opcache \
+  apcu \
+  memcached
 
 RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-	; \
-	rm -rf /var/lib/apt/lists/*
+  ; \
+  rm -rf /var/lib/apt/lists/*
 
-# Default Volume for Web
+# set recommended opcache settings
+RUN { \
+  echo 'opcache.memory_consumption=768'; \
+  echo 'opcache.interned_strings_buffer=16'; \
+  echo 'opcache.max_accelerated_files=99999'; \
+  echo 'opcache.revalidate_freq=2'; \
+  echo 'opcache.fast_shutdown=1'; \
+  } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+# set recommended PHP.ini settings
+RUN { \
+  echo 'file_uploads=On'; \
+  echo 'upload_max_filesize=256M'; \
+  echo 'post_max_size=256M'; \
+  echo 'max_execution_time=300'; \
+  echo 'memory_limit=512M'; \
+  echo 'expose_php=Off'; \
+  } > /usr/local/etc/php/conf.d/php73-recommended.ini
+
+# https://wordpress.org/support/article/editing-wp-config-php/#configure-error-logging
+RUN { \
+  echo 'error_reporting = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_RECOVERABLE_ERROR'; \
+  echo 'display_errors=Off'; \
+  echo 'display_startup_errors=Off'; \
+  echo 'log_errors=On'; \
+  echo 'error_log=/dev/stderr'; \
+  echo 'log_errors_max_len=1024'; \
+  echo 'ignore_repeated_errors=On'; \
+  echo 'ignore_repeated_source=Off'; \
+  echo 'html_errors=Off'; \
+  } > /usr/local/etc/php/conf.d/error-logging.ini
+
+# Enable apache modules
+RUN a2enmod setenvif \
+  headers \
+  security2 \
+  deflate \
+  filter \
+  expires \
+  rewrite \
+  include \
+  ext_filter
+
+# Default Volume for Apache
 VOLUME /var/www/html
 
-COPY wordpress/.htaccess /var/www
+# Copy Apache Configs
+COPY apache/conf/dockerpress.conf /etc/apache2/conf-available/dockerpress.conf
+COPY apache/conf/mozilla-observatory.conf /etc/apache2/conf-available/mozilla-observatory.conf
 
-COPY wordpress/wp-config-sample.php /var/www/wp-config-sample.php
+# Enable Apache Configs
+RUN a2enconf dockerpress
+
+# Installing Apache mod-pagespeed
+RUN curl -o /home/mod-pagespeed-beta_current_amd64.deb https://dl-ssl.google.com/dl/linux/direct/mod-pagespeed-beta_current_amd64.deb
+RUN dpkg -i /home/mod-pagespeed-*.deb
+RUN apt-get -f install
+
+COPY .htaccess /var/www/.htaccess-template
+COPY wp-config-sample.php /var/www/wp-config-sample.php
 
 # Copy commands
 COPY bin/* /usr/local/bin/
-
-# Add Permissions
-RUN chmod +x /usr/local/bin/wp
-RUN chmod +x /usr/local/bin/mysql-optimize
-RUN chmod +x /usr/local/bin/wpcli-run-actionscheduler
-RUN chmod +x /usr/local/bin/wpcli-run-clear-scheduler-log
-RUN chmod +x /usr/local/bin/wpcli-run-clear-spams
-RUN chmod +x /usr/local/bin/wpcli-run-delete-transient
-RUN chmod +x /usr/local/bin/wpcli-run-media-regenerate
-RUN chmod +x /usr/local/bin/wpcli-run-schedule
-
-# Copy Crontab
-COPY cron.d/dockerpress.crontab /etc/cron.d/dockerpress
-RUN chmod 644 /etc/cron.d/dockerpress
+# Fix Permissions
+RUN chmod -R +777 /usr/local/bin/
 
 RUN { \
-	echo '[client]'; \
-	echo 'user=MYUSER'; \
-	echo "password='MYPASSWORD'"; \
-	echo 'host=MYHOST'; \
-	echo 'port=MYPORT'; \
-	echo ''; \
-	echo '[mysql]'; \
-	echo 'database=MYDATABASE'; \
-	echo ''; \
-	} > /root/.my.cnf.sample
+  echo '[client]'; \
+  echo 'user=MYUSER'; \
+  echo "password='MYPASSWORD'"; \
+  echo 'host=MYHOST'; \
+  echo 'port=MYPORT'; \
+  echo ''; \
+  echo '[mysql]'; \
+  echo 'database=MYDATABASE'; \
+  echo ''; \
+  } > /root/.my.cnf.sample
 
-# Running wordpress startup scripts
+# Running container startup scripts
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Default Port for Apache
 EXPOSE 80
 
-# Set the workdir and command
-ENV PATH="/usr/local/lsws/bin:${PATH}"
-
 ENTRYPOINT ["entrypoint.sh"]
+
+CMD ["apache2-foreground"]

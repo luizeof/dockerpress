@@ -1,7 +1,3 @@
 #!/bin/bash
 
-touch /var/www/wp-scheduler.log
-
-chown www-data:www-data /var/www/wp-scheduler.log
-
-wp action-scheduler run --path=/var/www/html >/var/www/wp-scheduler.log
+wp action-scheduler run --path=/var/www/html
