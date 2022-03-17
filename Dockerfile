@@ -126,6 +126,8 @@ RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp74
 
 COPY php/opcache.ini /usr/local/lsws/lsphp74/etc/php/7.4/mods-available/opcache.ini
 
+RUN touch /var/www/.opcache
+
 # Create the directories
 RUN mkdir --parents \
 	"/tmp/lshttpd/gzcache" \

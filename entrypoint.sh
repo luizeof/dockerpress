@@ -18,8 +18,8 @@ function update_wp_config() {
   wp config set DB_HOST "$WORDPRESS_DB_HOST:$WORDPRESS_DB_PORT" --add --type=constant
   wp config set DB_PORT $WORDPRESS_DB_PORT --raw --add --type=constant
   wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
-  wp config set WP_MEMORY_LIMIT '256M' --add --type=constant
-  wp config set WP_MAX_MEMORY_LIMIT '256M' --add --type=constant
+  wp config set WP_MEMORY_LIMIT 512M --add --type=constant
+  wp config set WP_MAX_MEMORY_LIMIT 512M --add --type=constant
 }
 
 function generate_litespeed_password() {
