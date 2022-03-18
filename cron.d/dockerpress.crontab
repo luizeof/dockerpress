@@ -6,4 +6,4 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 5 2 * * * root /usr/local/bin/wpcli-run-delete-transient
 5 3 * * * root /usr/local/bin/wpcli-run-clear-spams
 5 4 * * * root /usr/local/bin/wpcli-run-clear-scheduler-log
-5 4 * * * root /usr/local/bin/wpcli-run-media-regenerate
+5 5 * * * root /usr/local/bin/wpcli-run-media-regenerate
