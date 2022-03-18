@@ -124,7 +124,7 @@ RUN install_packages \
 RUN  sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 128M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
 RUN sed -i 's/post_max_size = 8M/post_max_size = 256M/g' /usr/local/lsws/lsphp74/etc/php/7.4/litespeed/php.ini
 
-COPY php/opcache.ini /usr/local/lsws/lsphp74/etc/php/7.4/mods-available/opcache.ini
+COPY php-7.4/config/opcache.ini /usr/local/lsws/lsphp74/etc/php/7.4/mods-available/opcache.ini
 
 RUN touch /var/www/.opcache
 
@@ -149,12 +149,12 @@ RUN chown --recursive "lsadm:lsadm" \
 
 # Configure the admin interface
 COPY --chown="lsadm:lsadm" \
-	"litespeed/config/admin_config.conf" \
+	"php-7.4/litespeed/admin_config.conf" \
 	"/usr/local/lsws/admin/conf/admin_config.conf"
 
 # Configure the server
 COPY --chown="lsadm:lsadm" \
-	"litespeed/config/httpd_config.conf" \
+	"php-7.4/litespeed/httpd_config.conf" \
 	"/usr/local/lsws/conf/httpd_config.conf"
 
 # Create the virtual host folders
@@ -166,7 +166,7 @@ RUN mkdir --parents \
 
 # Configure the virtual host
 COPY --chown="lsadm:lsadm" \
-	"litespeed/config/vhconf.conf" \
+	"php-7.4/litespeed/vhconf.conf" \
 	"/usr/local/lsws/conf/vhosts/wordpress/vhconf.conf"
 
 # Set up the virtual host configuration permissions
