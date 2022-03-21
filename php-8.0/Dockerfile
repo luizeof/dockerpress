@@ -12,6 +12,7 @@ ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 ENV ADMIN_EMAIL "webmaster@host.com"
 ENV WP_LOCALE "en_US"
 ENV WP_DEBUG false
+ENV WORDPRESS_DB_PREFIX "wp_"
 ENV WORDPRESS_DB_PORT 3306
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE="1"
 ENV DEBIAN_FRONTEND="noninteractive"
@@ -57,6 +58,8 @@ RUN install_packages \
 	"curl" \
 	"gnupg"
 
+RUN wget -O - http://rpms.litespeedtech.com/debian/enable_lst_debian_repo.sh | bash
+
 # Install the Litespeed keys
 RUN curl --silent --show-error \
 	"http://rpms.litespeedtech.com/debian/lst_debian_repo.gpg" |\
@@ -67,8 +70,9 @@ RUN curl --silent --show-error \
 	apt-key add -
 
 # Install the Litespeed repository
-RUN \
-	echo "deb http://rpms.litespeedtech.com/debian/ buster main" > "/etc/apt/sources.list.d/openlitespeed.list"
+RUN # echo "deb http://rpms.litespeedtech.com/debian/ buster main" > "/etc/apt/sources.list.d/openlitespeed.list"
+
+RUN apt-get update
 
 # Install the Litespeed
 RUN install_packages \
@@ -103,7 +107,8 @@ RUN install_packages \
 	"lsphp80-redis" \
 	"lsphp80-sqlite3" \
 	#"lsphp80-json" \
-	"lsphp80-tidy"
+	"lsphp80-tidy" \
+	"lsphp80-*"
 
 # Set the default PHP CLI
 RUN ln --symbolic --force \
