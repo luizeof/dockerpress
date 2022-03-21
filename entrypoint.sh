@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# start memcache service
+service memcached start
+
 # remove default index.html if exists
 rm -f /var/www/html/index.html
 

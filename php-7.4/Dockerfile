@@ -34,11 +34,14 @@ RUN apt-get update \
 	wget \
 	nano \
 	htop \
+	ghostscript \
 	zip \
 	unzip \
 	git \
 	webp \
 	libwebp6 \
+	memcached \
+	libmemcached-tools \
 	graphicsmagick \
 	imagemagick \
 	zlib1g \

@@ -40,6 +40,8 @@ RUN apt-get update \
 	git \
 	webp \
 	libwebp6 \
+	memcached \
+	libmemcached-tools \
 	graphicsmagick \
 	imagemagick \
 	zlib1g \
