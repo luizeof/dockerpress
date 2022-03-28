@@ -1,7 +1,18 @@
 #!/bin/bash
 
+# Run wp-cron events
+
 touch /var/www/event-scheduler.log
 
 chown www-data:www-data /var/www/event-scheduler.log
 
 wp cron event run --due-now --path=/var/www/html >/var/www/event-scheduler.log
+
+# Run Action Scheduler
+
+touch /var/www/wp-scheduler.log
+
+chown www-data:www-data /var/www/wp-scheduler.log
+
+wp action-scheduler run --path=/var/www/html >/var/www/wp-scheduler.log
+

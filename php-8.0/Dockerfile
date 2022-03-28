@@ -107,9 +107,7 @@ RUN install_packages \
 	"lsphp80-pspell" \
 	"lsphp80-redis" \
 	"lsphp80-sqlite3" \
-	#"lsphp80-json" \
-	"lsphp80-tidy" \
-	"lsphp80-*"
+	"lsphp80-tidy"
 
 # Set the default PHP CLI
 RUN ln --symbolic --force \
@@ -207,7 +205,6 @@ COPY bin/* /usr/local/bin/
 # Add Permissions
 RUN chmod +x /usr/local/bin/wp
 RUN chmod +x /usr/local/bin/mysql-optimize
-RUN chmod +x /usr/local/bin/wpcli-run-actionscheduler
 RUN chmod +x /usr/local/bin/wpcli-run-clear-scheduler-log
 RUN chmod +x /usr/local/bin/wpcli-run-clear-spams
 RUN chmod +x /usr/local/bin/wpcli-run-delete-transient

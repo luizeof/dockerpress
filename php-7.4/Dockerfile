@@ -206,7 +206,6 @@ COPY bin/* /usr/local/bin/
 # Add Permissions
 RUN chmod +x /usr/local/bin/wp
 RUN chmod +x /usr/local/bin/mysql-optimize
-RUN chmod +x /usr/local/bin/wpcli-run-actionscheduler
 RUN chmod +x /usr/local/bin/wpcli-run-clear-scheduler-log
 RUN chmod +x /usr/local/bin/wpcli-run-clear-spams
 RUN chmod +x /usr/local/bin/wpcli-run-delete-transient
