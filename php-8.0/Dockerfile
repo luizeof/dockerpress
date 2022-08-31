@@ -37,6 +37,9 @@ RUN apt-get update \
 	nano \
 	htop \
 	ghostscript \
+	memcached \
+  	libmemcached-dev \
+  	libmemcached-tools \
 	zip \
 	unzip \
 	git \
@@ -135,6 +138,8 @@ RUN sed -i 's/memory_limit = 128M/memory_limit = 512M/g' /usr/local/lsws/lsphp80
 COPY php-8.0/config/opcache.ini /usr/local/lsws/lsphp80/etc/php/8.0/mods-available/opcache.ini
 
 RUN touch /var/www/.opcache
+
+COPY php-8.0/memcached.conf /etc/memcached.conf
 
 # Create the directories
 RUN mkdir --parents \
