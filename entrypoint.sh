@@ -172,6 +172,7 @@ wp core verify-checksums
 if [ ! -e /var/www/html/.htaccess ]; then
   cp /var/www/.htaccess /var/www/html
   chown -R www-data:www-data /var/www/html/.htaccess
+  wp rewrite structure '/%postname%/'
 fi
 
 # Start the LiteSpeed
