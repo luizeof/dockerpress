@@ -120,6 +120,11 @@ function install_wordpress() {
       wp theme update --all --path=/var/www/html
 
       echo "Done Installing."
+
+      cp /var/www/.htaccess /var/www/html
+      chown -R www-data:www-data /var/www/html/.htaccess
+      wp rewrite structure '/%postname%/'
+
     else
       echo 'Wordpress is already installed.'
     fi
@@ -173,11 +178,6 @@ install_dockerpress_plugins
 chown -R www-data:www-data /var/www/html
 
 wp core verify-checksums
-
-if [ ! -e /var/www/html/.htaccess ]; then
-  cp /var/www/.htaccess /var/www/html
-  chown -R www-data:www-data /var/www/html/.htaccess
-fi
 
 # Start the LiteSpeed
 /usr/local/lsws/bin/litespeed
