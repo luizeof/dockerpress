@@ -174,6 +174,8 @@ chown -R www-data:www-data /var/www/html
 
 wp core verify-checksums
 
+service memcached start
+
 # Start the LiteSpeed
 /usr/local/lsws/bin/litespeed
 
