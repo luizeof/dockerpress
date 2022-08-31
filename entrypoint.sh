@@ -96,7 +96,7 @@ function install_wordpress() {
       echo "Installing Wordpress for $VIRTUAL_HOST ..."
       wp core install --url=$VIRTUAL_HOST \
         --title=Wordpress \
-        --admin_user=$ADMIN_EMAIL \
+        --admin_user=$ADMIN_USER \
         --admin_password=$ADMIN_PASS \
         --admin_email=$ADMIN_EMAIL \
         --skip-email \

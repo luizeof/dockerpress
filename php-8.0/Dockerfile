@@ -11,6 +11,7 @@ ENV WP_CLI_CACHE_DIR "/var/www/.wp-cli/cache/"
 ENV WP_CLI_PACKAGES_DIR "/var/www/.wp-cli/packages/"
 ENV ADMIN_EMAIL "webmaster@host.com"
 ENV ADMIN_PASS "dockerpress"
+ENV ADMIN_USER "dockerpress"
 ENV WP_LOCALE "en_US"
 ENV WP_DEBUG false
 ENV WORDPRESS_DB_PORT 3306
