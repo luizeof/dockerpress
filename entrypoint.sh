@@ -20,6 +20,11 @@ function update_wp_config() {
   wp config set WP_DEBUG $WP_DEBUG --raw --add --type=constant
   wp config set WP_MEMORY_LIMIT 512M --add --type=constant
   wp config set WP_MAX_MEMORY_LIMIT 512M --add --type=constant
+
+  wp config set WP_REDIS_HOST $WP_REDIS_HOST --add --type=constant
+  wp config set WP_REDIS_DATABASE $WP_REDIS_DATABASE --raw --add --type=constant
+  wp config set WP_REDIS_PORT $WP_REDIS_PORT --raw --add --type=constant
+
 }
 
 function generate_litespeed_password() {
@@ -135,6 +140,9 @@ function install_dockerpress_plugins() {
 
   echo "Installing litespeed-cache ..."
   wp plugin install litespeed-cache --force --activate --path=/var/www/html
+  
+  echo "Installing redis-cache ..."
+  wp plugin install redis-cache
 
   echo "Installing regenerate-thumbnails ..."
   wp plugin install regenerate-thumbnails --force --activate --path=/var/www/html
