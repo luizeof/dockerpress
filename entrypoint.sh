@@ -86,7 +86,7 @@ function install_wordpress() {
   if [ ! -e /var/www/html/wp-config.php ]; then
 
     echo "Wordpress not found, downloading latest version ..."
-    wp core download --locale=$WP_LOCALE --path=/var/www/html
+    wp core download --path=/var/www/html
 
     echo "Creating wp-config.file ..."
     cp /var/www/wp-config-sample.php /var/www/html/wp-config.php
